@@ -138,3 +138,45 @@ Consistent throughout:
 - Never use full green for active nav icon — white icon + green dot only
 - Never invent new font sizes
 - Never use Material Symbols icons
+
+---
+
+## Component Inventory
+
+Complete list of reusable components. Build shared ones before any pages.
+
+### Layout
+- `BottomNav` — mobile navigation bar
+- `Sidebar` — desktop navigation
+- `PageHeader` — page title + optional action button
+- `SectionHeader` — section title + optional subtitle/count
+
+### Data Display
+- `StatCard` — label + large value + unit
+- `MacroCard` — circular ring + grams + label (protein/carbs/fat)
+- `CalorieRing` — large circular progress ring (dashboard hero)
+- `ProgressBar` — linear progress bar
+- `FoodItemCard` — food name + brand + macro dots + add button
+- `WeightCard` — current weight + target + trend line
+- `WaterCard` — current/goal + quick-add button
+
+### Forms & Inputs
+- `Input` — styled text/number input with label + error
+- `Button` — primary, secondary, danger variants
+- `FilterPills` — horizontal scrollable pill selector
+- `RadioCard` — selectable card (gender, activity, goal type)
+
+### Feedback
+- `LoadingSpinner`
+- `EmptyState` — icon + title + description + optional action
+- `Pagination`
+- `SessionExpiredModal`
+- `MacroBadge` — colored dots P/C/F inline (food item cards)
+
+### Build Order
+Build these five first — they appear on almost every page:
+1. Button
+2. Input
+3. PageHeader
+4. SectionHeader
+5. StatCard
