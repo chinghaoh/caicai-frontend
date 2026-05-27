@@ -169,6 +169,7 @@ Complete list of reusable components. Build shared ones before any pages.
 ### Feedback
 - `LoadingSpinner`
 - `EmptyState` — icon + title + description + optional action
+- `ErrorMessage` — page-level error with optional retry button
 - `Pagination`
 - `SessionExpiredModal`
 - `MacroBadge` — colored dots P/C/F inline (food item cards)
@@ -180,3 +181,28 @@ Build these five first — they appear on almost every page:
 3. PageHeader
 4. SectionHeader
 5. StatCard
+
+---
+
+## State Management
+
+- AuthContext — user, isAuthenticated, login, logout
+- Never prop drill auth state — always use useAuth() hook
+- apiClient is a utility, import directly, no context needed
+- Component data passes as props — never put it in context
+
+---
+
+## Cursor Rules
+
+Always add `cursor-pointer` to any interactive element that is not a native button or link:
+- Buttons — `cursor-pointer` in base classes
+- Selectable table/list rows
+- Radio cards (gender, activity, goal type)
+- Filter pills
+- Food item cards (the row itself)
+- Any `div` or `span` with an `onClick` handler
+
+Rule: if it does something when clicked, it needs `cursor-pointer`.
+Native `<button>` and `<a>` elements already have it by default in most browsers,
+but add it explicitly to be safe.

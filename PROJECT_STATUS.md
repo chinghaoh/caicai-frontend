@@ -54,7 +54,10 @@ None yet.
 
 ## Current Task
 
-_What are you working on right now? Update this at the start of each session._
+Current Task: Step 5 — Building shared frontend components
+Completed so far: LoadingSpinner, Button, Input (not tested yet), 
+PageHeader, SectionHeader, ErrorMessage
+Next: Test Input, then StatCard, MacroCard, CalorieRing
 
 Not started.
 
