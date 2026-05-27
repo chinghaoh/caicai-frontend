@@ -20,7 +20,7 @@
 [x] 3.  GlobalExceptionHandler + AppException
 [x] 4.  Auth backend (register, verify, login, logout, forgot/reset password, demo)
 [x] 5.  Shared frontend components (ui/)
-[ ] 6.  apiClient + SessionExpiredModal
+[x] 6.  apiClient + SessionExpiredModal
 [ ] 7.  Auth frontend pages
 [ ] 8.  Onboarding flow + AI goal suggestion
 [ ] 9.  Food search (OpenFoodFacts + Redis cache)
@@ -44,6 +44,9 @@
 - MacroCard deferred to step 11 (food log) where need will be clearer
 - Macro education tooltips added to backlog (implement after step 16)
 
+- App.jsx uses a div wrapper instead of fragment to set bg-bg-page as global background
+- SessionExpiredModal tested and working
+
 
 ---
 
@@ -61,12 +64,15 @@ src/components/ui/MacroBadge.jsx
 src/components/ui/SessionExpiredModal.jsx
 src/components/ui/Input.jsx
 src/components/ui/Button.jsx
+src/apiClient.js
+src/App.jsx
 
 ---
 
 ## Current Task
 
-Step 6 — apiClient + SessionExpiredModal wiring into App.jsx
+Step 7 — Auth frontend pages (register, login, forgot password, reset password)
+
 ---
 
 ## Known Issues / Blockers

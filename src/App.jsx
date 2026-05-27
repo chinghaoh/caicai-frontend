@@ -1,13 +1,25 @@
+import { useState, useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { setSessionExpiredHandler } from './apiClient'
 import SessionExpiredModal from './components/ui/SessionExpiredModal'
-import LoadingSpinner from './components/ui/LoadingSpinner'
-import Input from './components/ui/Input'
-function App() {
+
+export default function App() {
+  const [sessionExpired, setSessionExpired] = useState(false)
+
+  useEffect(() => {
+    setSessionExpiredHandler(() => setSessionExpired(true))
+  }, [])
+
   return (
-    <div className="min-h-screen bg-bg-page text-text-primary">
-      <p className="p-4">Caicai</p>
-      <Input label="Email" type="email" value="" onChange={() => {}} placeholder="Enter your email" error="" disabled={false} />
+    <div className="min-h-screen bg-bg-page">
+      <Routes>
+        <Route path="*" element={<p className="text-text-primary p-4">Caicai</p>} />
+      </Routes>
+
+      <SessionExpiredModal
+        isOpen={sessionExpired}
+        onClose={() => setSessionExpired(false)}
+      />
     </div>
   )
 }
-
-export default App
