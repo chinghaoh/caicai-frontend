@@ -7,7 +7,7 @@
 
 ## Current Status
 
-**Phase:** Not started — ready to build  
+**Phase:** started — ready to build  
 **Last updated:** 2026-05-27
 
 ---
@@ -15,10 +15,10 @@
 ## Bootstrap Progress
 
 ```
-[ ] 1.  Database migrations
-[ ] 2.  Backend entities + repositories
-[ ] 3.  GlobalExceptionHandler + AppException
-[ ] 4.  Auth backend (register, verify, login, logout, forgot/reset password, demo)
+[x] 1. Database migrations
+[x] 2. Backend entities + repositories
+[x] 3.  GlobalExceptionHandler + AppException
+[x] 4.  Auth backend (register, verify, login, logout, forgot/reset password, demo)
 [ ] 5.  Shared frontend components (ui/)
 [ ] 6.  apiClient + SessionExpiredModal
 [ ] 7.  Auth frontend pages
