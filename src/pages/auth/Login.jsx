@@ -38,7 +38,7 @@ export default function Login() {
         <h1 className="text-lg font-semibold text-text-primary mb-1">Caicai</h1>
         <p className="text-sm text-text-muted mb-8">Track your nutrition. Reach your goals.</p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Input
             label="Email"
             type="email"

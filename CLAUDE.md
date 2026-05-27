@@ -534,8 +534,8 @@ Never optimize prematurely. If there's no evidence of a problem, don't solve it.
 
 ```css
 @theme {
-  --color-green:         #22c55e;
-  --color-green-light:   #4ade80;
+  --color-green:         #10b981;
+  --color-green-light:   #86efac;
   --color-green-bg:      #052e16;
   --color-orange:        #f97316;
   --color-orange-bg:     #431407;
@@ -1051,5 +1051,8 @@ Both repos have GitHub Actions that auto-deploy on push to `main`.
 21. **Redis is required locally** — app fails fast without it, never mock it
 22. **`APP_COOKIE_SECURE=false` locally** — secure cookies over HTTP silently breaks auth
 23. **OpenFoodFacts failures are non-fatal** — catch specifically, log, return cached results
-24. **Hibernate naming strategy doesn't handle numbers correctly** — caloriesPer100g becomes calories_per100g not calories_per_100g. Always use explicit @Column(name = "...") for fields with numbers in the name.
-25. To view live logs on EC2: ssh into instance and run `tail -f ~/app.log`. Always check logs before assuming production is broken.
+24. **Hibernate naming strategy doesn't handle numbers correctly** — caloriesPer100g becomes calories_per100g not   
+calories_per_100g. Always use explicit @Column(name = "...") for fields with numbers in the name.
+25. **To view live logs on EC2 : ssh into instance and run `tail -f ~/app.log`** . Always check logs before assuming production is broken.
+26. **401 on auth endpoints is a login failure, not session expiry** — 
+    never trigger SessionExpiredModal on /api/auth/* routes

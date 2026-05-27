@@ -57,7 +57,7 @@ export default function Register() {
         <h1 className="text-lg font-semibold text-text-primary mb-1">Create your account</h1>
         <p className="text-sm text-text-muted mb-8">Start tracking your nutrition today.</p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Input
             label="Name"
             type="text"

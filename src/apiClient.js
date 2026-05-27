@@ -26,16 +26,21 @@ export async function apiClient(path, options = {}) {
     throw { message: 'Network error, please try again' }
   }
 
-  if (response.status === 401) {
-    onSessionExpired?.()
-    throw { message: 'Session expired' }
-  }
-
   let json
   try {
     json = await response.json()
   } catch {
     throw { message: 'Unexpected server response' }
+  }
+
+  if (response.status === 401) {
+    if (!path.includes('/api/auth/')) {
+      onSessionExpired?.()
+    }
+    throw {
+      message: json.message ?? 'Session expired',
+      fieldErrors: json.fieldErrors ?? null,
+    }
   }
 
   if (!response.ok) {

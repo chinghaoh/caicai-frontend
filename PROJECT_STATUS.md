@@ -21,7 +21,7 @@
 [x] 4.  Auth backend (register, verify, login, logout, forgot/reset password, demo)
 [x] 5.  Shared frontend components (ui/)
 [x] 6.  apiClient + SessionExpiredModal
-[ ] 7.  Auth frontend pages
+[x] 7.  Auth frontend pages
 [ ] 8.  Onboarding flow + AI goal suggestion
 [ ] 9.  Food search (OpenFoodFacts + Redis cache)
 [ ] 10. Favourite foods
@@ -47,6 +47,13 @@
 - App.jsx uses a div wrapper instead of fragment to set bg-bg-page as global background
 - SessionExpiredModal tested and working
 
+- Changed --color-green from #22c55e to #10b981 (less neon, more refined)
+- Removed @import "tailwindcss" from index.css — @tailwindcss/vite plugin handles it automatically
+- Added path alias @ → src/ in vite.config.js
+
+- Added noValidate to all auth forms — browser native validation disabled
+- Fixed apiClient 401 handling — auth endpoints don't trigger SessionExpiredModal
+- Moved json parsing before 401 check in apiClient
 
 ---
 
@@ -66,12 +73,16 @@ src/components/ui/Input.jsx
 src/components/ui/Button.jsx
 src/apiClient.js
 src/App.jsx
+src/pages/auth/Login.jsx
+src/pages/auth/Register.jsx
+src/pages/auth/ForgotPassword.jsx
+src/pages/auth/ResetPassword.jsx
 
 ---
 
 ## Current Task
 
-Step 7 — Auth frontend pages (register, login, forgot password, reset password)
+Step 8 — Onboarding flow + AI goal suggestion
 
 ---
 

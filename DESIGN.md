@@ -19,7 +19,7 @@ Border: `#2e2e2e`
 
 | Nutrient | Color | Hex |
 |----------|-------|-----|
-| Calories | green | `#4ade80` |
+| Calories | green | `#10b981` |
 | Protein | blue | `#3b82f6` |
 | Carbs | orange | `#f97316` |
 | Fat | yellow | `#eab308` |

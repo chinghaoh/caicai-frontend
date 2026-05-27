@@ -56,7 +56,7 @@ export default function ForgotPassword() {
           Enter your email and we'll send you a reset link.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <Input
             label="Email"
             type="email"
