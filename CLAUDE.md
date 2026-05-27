@@ -68,6 +68,10 @@ Never skip steps. Never build out of order.
 - Structured logging — add log levels and correlation IDs to make
     debugging production issues easier. Implement before first
     production deployment.
+- Macro education tooltips — show a small info popup on each macro
+  (protein, carbs, fat, calories) explaining what it does and why it matters.
+  Extensible for when fiber, sodium, and sugar are added to the UI.
+  Implement after dashboard is built (step 16).
 
 ---
 
@@ -601,6 +605,8 @@ src/components/ui/
   ProgressBar.jsx     ← { value, max, color }
   MacroBadge.jsx      ← { protein, carbs, fat, calories }
   SessionExpiredModal ← global, lives in App.jsx
+  Button.jsx          ← { children, variant, loading, disabled, fullWidth }
+  Input.jsx           ← { label, type, value, onChange, error, placeholder }
 ```
 
 Usage examples:

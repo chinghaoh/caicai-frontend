@@ -19,7 +19,7 @@
 [x] 2. Backend entities + repositories
 [x] 3.  GlobalExceptionHandler + AppException
 [x] 4.  Auth backend (register, verify, login, logout, forgot/reset password, demo)
-[ ] 5.  Shared frontend components (ui/)
+[x] 5.  Shared frontend components (ui/)
 [ ] 6.  apiClient + SessionExpiredModal
 [ ] 7.  Auth frontend pages
 [ ] 8.  Onboarding flow + AI goal suggestion
@@ -38,29 +38,35 @@
 
 ## Decisions Made This Session
 
-_Add any new decisions, deviations from CLAUDE.md, or clarifications here after each session._
+- Added Button and Input to shared ui/ components (not in original CLAUDE.md)
+- Deferred SectionHeader, ErrorMessage, MacroCard, CalorieRing — no immediate use case
+- CalorieRing deferred to step 16 (dashboard)
+- MacroCard deferred to step 11 (food log) where need will be clearer
+- Macro education tooltips added to backlog (implement after step 16)
 
-None yet.
 
 ---
 
 ## Files Created So Far
 
 _List every file created, so the next session knows what exists._
-
-None yet.
+src/components/ui/StatCard.jsx
+src/components/ui/PageHeader.jsx
+src/components/ui/EmptyState.jsx
+src/components/ui/FilterPills.jsx
+src/components/ui/Pagination.jsx
+src/components/ui/LoadingSpinner.jsx
+src/components/ui/ProgressBar.jsx
+src/components/ui/MacroBadge.jsx
+src/components/ui/SessionExpiredModal.jsx
+src/components/ui/Input.jsx
+src/components/ui/Button.jsx
 
 ---
 
 ## Current Task
 
-Current Task: Step 5 — Building shared frontend components
-Completed so far: LoadingSpinner, Button, Input (not tested yet), 
-PageHeader, SectionHeader, ErrorMessage
-Next: Test Input, then StatCard, MacroCard, CalorieRing
-
-Not started.
-
+Step 6 — apiClient + SessionExpiredModal wiring into App.jsx
 ---
 
 ## Known Issues / Blockers
