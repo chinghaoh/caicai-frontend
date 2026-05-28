@@ -2,13 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft } from 'lucide-react'
 import { apiClient } from '@/apiClient'
+import { useAuth } from '@/context/AuthContext'
 import Button from '@/components/ui/Button'
 import StepBasics from './StepBasics'
 import StepGoals from './StepGoals'
 import StepSuggestion from './StepSuggestion'
-import { useAuth } from '@/context/AuthContext'  
-
-
 
 const TOTAL_STEPS = 3
 
@@ -29,25 +27,25 @@ function ProgressBar({ current, total }) {
 
 export default function Onboarding() {
   const navigate = useNavigate()
-  const { completeOnboarding } = useAuth()   
+  const { completeOnboarding } = useAuth()
 
-  const [step, setStep]           = useState(1)
-  const [loading, setLoading]     = useState(false)
-  const [saving, setSaving]       = useState(false)
-  const [errors, setErrors]       = useState({})
-  const [saveError, setSaveError] = useState('')
-  const [adjusting, setAdjusting] = useState(false)
+  const [step, setStep]             = useState(1)
+  const [loading, setLoading]       = useState(false)
+  const [saving, setSaving]         = useState(false)
+  const [errors, setErrors]         = useState({})
+  const [saveError, setSaveError]   = useState('')
+  const [adjusting, setAdjusting]   = useState(false)
   const [suggestion, setSuggestion] = useState(null)
-  const [adjusted, setAdjusted]   = useState(null)
+  const [adjusted, setAdjusted]     = useState(null)
 
   const [formData, setFormData] = useState({
-    gender:        '',
-    age:           '',
-    heightCm:      '',
-    weightKg:      '',
-    goalType:      '',
-    targetWeightKg:'',
-    activityLevel: '',
+    gender:         '',
+    age:            '',
+    heightCm:       '',
+    weightKg:       '',
+    goalType:       '',
+    targetWeightKg: '',
+    activityLevel:  '',
   })
 
   function handleChange(field, value) {
@@ -103,6 +101,7 @@ export default function Onboarding() {
     try {
       await apiClient('/api/users/me/complete-onboarding', { method: 'POST' })
     } catch {
+      // best effort — navigate regardless
     }
     navigate('/dashboard')
   }
@@ -114,20 +113,24 @@ export default function Onboarding() {
       const data = await apiClient('/api/goals/suggest', {
         method: 'POST',
         body: {
-          age:           parseInt(formData.age),
-          weightKg:      parseFloat(formData.weightKg),
-          heightCm:      parseInt(formData.heightCm),
-          gender:        formData.gender,
-          activityLevel: formData.activityLevel,
-          goalType:      formData.goalType,
-          targetWeightKg:parseFloat(formData.targetWeightKg),
+          age:            parseInt(formData.age),
+          weightKg:       parseFloat(formData.weightKg),
+          heightCm:       parseInt(formData.heightCm),
+          gender:         formData.gender,
+          activityLevel:  formData.activityLevel,
+          goalType:       formData.goalType,
+          targetWeightKg: parseFloat(formData.targetWeightKg),
         },
       })
-      setSuggestion(data.data)
-      setAdjusted(data.data)
+      setSuggestion(data)
+      setAdjusted(data)
       setStep(3)
-    } catch (err) {
-      setErrors({ general: err.message })
+    } catch {
+      // AI failed — fall through to manual entry
+      setSuggestion(null)
+      setAdjusted({ calories: '', protein: '', carbs: '', fat: '', waterMl: '' })
+      setAdjusting(true)
+      setStep(3)
     } finally {
       setLoading(false)
     }
@@ -141,13 +144,13 @@ export default function Onboarding() {
       await apiClient('/api/goals', {
         method: 'POST',
         body: {
-          calories:        parseInt(goals.calories),
-          protein:         parseInt(goals.protein),
-          carbs:           parseInt(goals.carbs),
-          fat:             parseInt(goals.fat),
-          waterMl:         parseInt(goals.waterMl),
-          startingWeightKg:parseFloat(formData.weightKg),
-          targetWeightKg:  parseFloat(formData.targetWeightKg),
+          calories:         parseInt(goals.calories),
+          protein:          parseInt(goals.protein),
+          carbs:            parseInt(goals.carbs),
+          fat:              parseInt(goals.fat),
+          waterMl:          parseInt(goals.waterMl),
+          startingWeightKg: parseFloat(formData.weightKg),
+          targetWeightKg:   parseFloat(formData.targetWeightKg),
         },
       })
       completeOnboarding()
@@ -196,7 +199,7 @@ export default function Onboarding() {
         {step === 2 && (
           <StepGoals data={formData} onChange={handleChange} errors={errors} />
         )}
-        {step === 3 && suggestion && (
+        {step === 3 && (suggestion || adjusting) && (
           <StepSuggestion
             suggestion={suggestion}
             adjusting={adjusting}
@@ -207,10 +210,6 @@ export default function Onboarding() {
             saving={saving}
             error={saveError}
           />
-        )}
-
-        {errors.general && (
-          <p className="text-xs text-red mt-4">{errors.general}</p>
         )}
       </div>
 

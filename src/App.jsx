@@ -48,6 +48,14 @@ function AuthRoute({ children }) {
   return children
 }
 
+function PlaceholderDashboard() {
+  return (
+    <div className="min-h-screen bg-bg-page flex items-center justify-center">
+      <p className="text-text-muted text-sm">Dashboard coming soon.</p>
+    </div>
+  )
+}
+
 // ── Inner app —
 function AppInner() {
   const [sessionExpired, setSessionExpired] = useState(false)
@@ -67,6 +75,7 @@ function AppInner() {
 
         {/* Protected routes — redirect to login if not authenticated */}
         <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><PlaceholderDashboard /></ProtectedRoute>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
