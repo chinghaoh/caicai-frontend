@@ -6,7 +6,8 @@ import Button from '@/components/ui/Button'
 import StepBasics from './StepBasics'
 import StepGoals from './StepGoals'
 import StepSuggestion from './StepSuggestion'
-const { completeOnboarding } = useAuth()
+import { useAuth } from '@/context/AuthContext'  
+
 
 
 const TOTAL_STEPS = 3
@@ -28,6 +29,7 @@ function ProgressBar({ current, total }) {
 
 export default function Onboarding() {
   const navigate = useNavigate()
+  const { completeOnboarding } = useAuth()   
 
   const [step, setStep]           = useState(1)
   const [loading, setLoading]     = useState(false)
