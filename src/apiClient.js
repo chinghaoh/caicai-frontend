@@ -28,7 +28,8 @@ export async function apiClient(path, options = {}) {
 
   let json
   try {
-    json = await response.json()
+    const text = await response.text()
+    json = text ? JSON.parse(text) : {}
   } catch {
     throw { message: 'Unexpected server response' }
   }

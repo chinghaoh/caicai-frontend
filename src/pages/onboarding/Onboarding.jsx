@@ -192,7 +192,7 @@ export default function Onboarding() {
       </div>
 
       {/* Step content */}
-      <div className="flex-1 px-4 overflow-y-auto pb-6">
+      <div className="flex-1 px-4 pt-4 overflow-y-auto pb-6">
         {step === 1 && (
           <StepBasics data={formData} onChange={handleChange} errors={errors} />
         )}

@@ -9,8 +9,8 @@ import Register from './pages/auth/Register'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import Onboarding from './pages/onboarding/Onboarding'
-
-// ── Protected route — redirects to /login if not authenticated
+import Favourites from './pages/favourites/Favourites'
+import FoodLog from './pages/food-log/FoodLog'
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
 
@@ -29,7 +29,6 @@ function ProtectedRoute({ children }) {
   return children
 }
 
-// ── Auth route — redirects authenticated users away from auth pages
 function AuthRoute({ children }) {
   const { isAuthenticated, loading, user } = useAuth()
 
@@ -56,7 +55,6 @@ function PlaceholderDashboard() {
   )
 }
 
-// ── Inner app —
 function AppInner() {
   const [sessionExpired, setSessionExpired] = useState(false)
 
@@ -67,17 +65,16 @@ function AppInner() {
   return (
     <div className="min-h-screen bg-bg-page">
       <Routes>
-        {/* Auth routes — redirect to dashboard if already logged in*/}
-        <Route path="/login"          element={<AuthRoute><Login /></AuthRoute>} />
-        <Route path="/register"       element={<AuthRoute><Register /></AuthRoute>} />
-        <Route path="/forgot-password"element={<AuthRoute><ForgotPassword /></AuthRoute>} />
-        <Route path="/reset-password" element={<AuthRoute><ResetPassword /></AuthRoute>} />
+        <Route path="/login"           element={<AuthRoute><Login /></AuthRoute>} />
+        <Route path="/register"        element={<AuthRoute><Register /></AuthRoute>} />
+        <Route path="/forgot-password" element={<AuthRoute><ForgotPassword /></AuthRoute>} />
+        <Route path="/reset-password"  element={<AuthRoute><ResetPassword /></AuthRoute>} />
 
-        {/* Protected routes — redirect to login if not authenticated */}
-        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><PlaceholderDashboard /></ProtectedRoute>} />
+        <Route path="/onboarding"  element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+        <Route path="/dashboard"   element={<ProtectedRoute><PlaceholderDashboard /></ProtectedRoute>} />
+        <Route path="/favourites"  element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
+        <Route path="/log"    element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
 
@@ -89,7 +86,6 @@ function AppInner() {
   )
 }
 
-// ── Root —
 export default function App() {
   return (
     <AuthProvider>
