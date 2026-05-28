@@ -4,6 +4,7 @@ import { apiClient } from '@/apiClient'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
+
 export default function Register() {
   const navigate = useNavigate()
   const [name, setName] = useState('')

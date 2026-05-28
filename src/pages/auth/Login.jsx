@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiClient } from '@/apiClient'
+import { useAuth } from '@/context/AuthContext'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { login } = useAuth()
+
+  const [email, setEmail]           = useState('')
+  const [password, setPassword]     = useState('')
+  const [loading, setLoading]       = useState(false)
+  const [error, setError]           = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
 
   const handleSubmit = async (e) => {
@@ -18,11 +21,12 @@ export default function Login() {
     setFieldErrors({})
     setLoading(true)
     try {
-      await apiClient('/api/auth/login', {
+      const data = await apiClient('/api/auth/login', {
         method: 'POST',
         body: { email, password },
       })
-      navigate('/dashboard')
+      login(data)
+      navigate(data.hasCompletedOnboarding ? '/dashboard' : '/onboarding')
     } catch (err) {
       if (err.fieldErrors) setFieldErrors(err.fieldErrors)
       else setError(err.message)
@@ -81,6 +85,7 @@ export default function Login() {
             Sign up
           </Link>
         </p>
+
       </div>
     </div>
   )

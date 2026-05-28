@@ -17,6 +17,26 @@ A weight management and nutrition tracking web app. Users log meals, track macro
 
 ---
 
+## Output Discipline
+
+Build one file at a time. After each file, stop and wait for confirmation before
+proceeding to the next. Never produce multiple files in a single response.
+
+Order within a step:
+1. State which file you're about to write and why
+2. Write it
+3. Stop — wait for "good" or feedback before continuing
+
+At the end of every step, before committing, provide a PROJECT_STATUS.md update summary containing:
+- Which bootstrap step to check off
+- Any new decisions to add
+- All new files created with their full paths
+- All existing files modified with their full paths
+- What to set as the Current Task
+- Any new blockers or known issues
+
+---
+
 ## Before Writing Any Code — Checklist
 
 Before implementing any feature ask yourself:
@@ -66,8 +86,8 @@ Never skip steps. Never build out of order.
 - AI food recommendations — suggest foods to user based on remaining
   daily macro goals. Implement after dashboard is built (step 16).
 - Structured logging — add log levels and correlation IDs to make
-    debugging production issues easier. Implement before first
-    production deployment.
+  debugging production issues easier. Implement before first
+  production deployment.
 - Macro education tooltips — show a small info popup on each macro
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
@@ -215,6 +235,7 @@ POST /api/auth/demo
 GET    /api/users/me
 PUT    /api/users/me
 DELETE /api/users/me
+POST   /api/users/me/complete-onboarding
 ```
 
 ### Food Items
@@ -312,14 +333,16 @@ GET /api/dashboard/monthly?date=2024-01-15
 6. Redirect to /dashboard
 7. Onboarding is skippable — show helper text:
    "You can set your goals anytime in Settings"
-8. If skipped → no Goal record created, dashboard shows empty goal state
+8. 8. If skipped → POST /api/users/me/complete-onboarding, 
+   no Goal record created, dashboard shows empty goal state
 ```
 
 ### Login
 ```
 1. POST /api/auth/login
 2. Backend returns JWT cookie
-3. Redirect to /dashboard
+3. hasCompletedOnboarding = true  → /dashboard
+4. hasCompletedOnboarding = false → /onboarding
 ```
 
 ### Password Reset
@@ -607,6 +630,8 @@ src/components/ui/
   SessionExpiredModal ← global, lives in App.jsx
   Button.jsx          ← { children, variant, loading, disabled, fullWidth }
   Input.jsx           ← { label, type, value, onChange, error, placeholder }
+  RadioCard.jsx       ← { label, description?, icon?, selected, onClick }
+
 ```
 
 Usage examples:
@@ -639,6 +664,9 @@ pages/
     GoalHistory.jsx
   onboarding/
     Onboarding.jsx
+    StepBasics.jsx
+    StepGoals.jsx
+    StepSuggestion.jsx
   settings/
     Settings.jsx
 ```
@@ -1052,7 +1080,10 @@ Both repos have GitHub Actions that auto-deploy on push to `main`.
 22. **`APP_COOKIE_SECURE=false` locally** — secure cookies over HTTP silently breaks auth
 23. **OpenFoodFacts failures are non-fatal** — catch specifically, log, return cached results
 24. **Hibernate naming strategy doesn't handle numbers correctly** — caloriesPer100g becomes calories_per100g not   
-calories_per_100g. Always use explicit @Column(name = "...") for fields with numbers in the name.
+    calories_per_100g. Always use explicit @Column(name = "...") for fields with numbers in the name.
 25. **To view live logs on EC2 : ssh into instance and run `tail -f ~/app.log`** . Always check logs before assuming production is broken.
-26. **401 on auth endpoints is a login failure, not session expiry** — 
+26. **401 on auth endpoints is a login failure, not session expiry** —
     never trigger SessionExpiredModal on /api/auth/* routes
+27. In IntelliJ, system environment variables are not passed to the JVM automatically —
+        either add them to the run configuration or use raw values in application-local.yml.
+        Never commit raw secrets to git.
