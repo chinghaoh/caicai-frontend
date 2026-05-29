@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiClient } from '@/apiClient'
 import { useAuth } from '@/context/AuthContext'
+import AuthShell from '@/components/ui/AuthShell'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
@@ -9,13 +10,13 @@ export default function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
 
-  const [email, setEmail]           = useState('')
-  const [password, setPassword]     = useState('')
-  const [loading, setLoading]       = useState(false)
-  const [error, setError]           = useState(null)
+  const [email, setEmail]             = useState('')
+  const [password, setPassword]       = useState('')
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
     setFieldErrors({})
@@ -36,57 +37,52 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-page flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <AuthShell>
+      <h1 className="text-2xl font-bold text-green mb-1">Caicai</h1>
+      <p className="text-sm text-text-muted mb-8">Track your nutrition. Reach your goals.</p>
 
-        <h1 className="text-lg font-semibold text-text-primary mb-1">Caicai</h1>
-        <p className="text-sm text-text-muted mb-8">Track your nutrition. Reach your goals.</p>
-
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={e => {
-              setEmail(e.target.value)
-              setFieldErrors(prev => ({ ...prev, email: null }))
-            }}
-            placeholder="you@example.com"
-            error={fieldErrors.email}
-          />
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={e => {
-              setPassword(e.target.value)
-              setFieldErrors(prev => ({ ...prev, password: null }))
-            }}
-            placeholder="••••••••"
-            error={fieldErrors.password}
-          />
-
-          {error && <p className="text-xs text-red">{error}</p>}
-
-          <div className="flex justify-end">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={e => {
+            setEmail(e.target.value)
+            setFieldErrors(prev => ({ ...prev, email: null }))
+          }}
+          placeholder="you@example.com"
+          error={fieldErrors.email}
+        />
+        <Input
+          label="Password"
+          labelAction={
             <Link to="/forgot-password" className="text-sm text-text-muted hover:text-text-secondary">
               Forgot password?
             </Link>
-          </div>
+          }
+          type="password"
+          value={password}
+          onChange={e => {
+            setPassword(e.target.value)
+            setFieldErrors(prev => ({ ...prev, password: null }))
+          }}
+          placeholder="••••••••"
+          error={fieldErrors.password}
+        />
 
-          <Button type="submit" fullWidth loading={loading}>
-            Log in
-          </Button>
-        </form>
+        {error && <p className="text-xs text-red">{error}</p>}
 
-        <p className="text-sm text-text-muted text-center mt-6">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-green hover:opacity-80">
-            Sign up
-          </Link>
-        </p>
+        <Button type="submit" fullWidth loading={loading}>
+          Log in
+        </Button>
+      </form>
 
-      </div>
-    </div>
+      <p className="text-sm text-text-muted text-center mt-6">
+        Don't have an account?{' '}
+        <Link to="/register" className="text-green hover:opacity-80">
+          Sign up
+        </Link>
+      </p>
+    </AuthShell>
   )
 }

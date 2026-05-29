@@ -50,6 +50,10 @@ Before implementing any feature ask yourself:
 7. **Is this transactional?** Any write operation → `@Transactional`
 8. **Could this cause a SQL injection?** Always use `:param` syntax
 9. **Does this throw an exception?** Always use `AppException`, never raw exceptions
+10. **Is this a frontend component or page?** Before writing any frontend code,
+    ask the user to confirm the design. For pages: request a screenshot or
+    description of the desktop layout before starting. Never assume the mobile
+    design scales to desktop automatically.
 
 ---
 

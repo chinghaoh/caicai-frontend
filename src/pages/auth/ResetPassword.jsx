@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { apiClient } from '@/apiClient'
+import AuthShell from '@/components/ui/AuthShell'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
@@ -9,28 +10,12 @@ export default function ResetPassword() {
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [password, setPassword]       = useState('')
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
 
-  if (!token) {
-    return (
-      <div className="min-h-screen bg-bg-page flex items-center justify-center px-4">
-        <div className="w-full max-w-sm text-center">
-          <h1 className="text-lg font-semibold text-text-primary mb-2">Invalid link</h1>
-          <p className="text-sm text-text-muted mb-6">
-            This password reset link is invalid or has expired.
-          </p>
-          <Link to="/forgot-password" className="text-sm text-green hover:opacity-80">
-            Request a new link
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
     setFieldErrors({})
@@ -49,36 +34,47 @@ export default function ResetPassword() {
     }
   }
 
+  if (!token) {
+    return (
+      <AuthShell>
+        <h1 className="text-2xl font-bold text-green mb-1">Invalid link</h1>
+        <p className="text-sm text-text-muted mt-2 mb-6">
+          This password reset link is invalid or has expired.
+        </p>
+        <Link to="/forgot-password" className="text-sm text-green hover:opacity-80">
+          Request a new link
+        </Link>
+      </AuthShell>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-bg-page flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <AuthShell>
+      <h1 className="text-2xl font-bold text-green mb-1">Reset your password</h1>
+      <p className="text-sm text-text-muted mb-8">Enter your new password below.</p>
 
-        <h1 className="text-lg font-semibold text-text-primary mb-1">Reset your password</h1>
-        <p className="text-sm text-text-muted mb-8">Enter your new password below.</p>
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        <Input
+          label="New password"
+          type="password"
+          value={password}
+          onChange={e => {
+            setPassword(e.target.value)
+            setFieldErrors(prev => ({ ...prev, password: null }))
+          }}
+          placeholder="••••••••"
+          error={fieldErrors.password}
+        />
+        <p className="text-xs text-text-muted -mt-2">
+          Min 6 characters, one uppercase letter and one digit.
+        </p>
 
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-          <Input
-            label="New password"
-            type="password"
-            value={password}
-            onChange={e => {
-              setPassword(e.target.value)
-              setFieldErrors(prev => ({ ...prev, password: null }))
-            }}
-            placeholder="••••••••"
-            error={fieldErrors.password}
-          />
-          <p className="text-xs text-text-muted -mt-2">
-            Min 6 characters, one uppercase letter and one digit.
-          </p>
+        {error && <p className="text-xs text-red">{error}</p>}
 
-          {error && <p className="text-xs text-red">{error}</p>}
-
-          <Button type="submit" fullWidth loading={loading}>
-            Reset password
-          </Button>
-        </form>
-      </div>
-    </div>
+        <Button type="submit" fullWidth loading={loading}>
+          Reset password
+        </Button>
+      </form>
+    </AuthShell>
   )
 }
