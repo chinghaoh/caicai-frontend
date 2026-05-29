@@ -594,7 +594,7 @@ Never optimize prematurely. If there's no evidence of a problem, don't solve it.
   --color-red-bg:        #450a0a;
   --color-purple:        #a855f7;
   --color-purple-bg:     #2e1065;
-  --color-bg-page:       #0f0f0f;
+  --color-bg-page:       #161616;
   --color-bg-card:       #1a1a1a;
   --color-bg-input:      #242424;
   --color-border:        #2e2e2e;

@@ -19,11 +19,11 @@ Border: `#2e2e2e`
 
 | Nutrient | Color | Hex |
 |----------|-------|-----|
-| Calories | green | `#10b981` |
-| Protein | blue | `#3b82f6` |
-| Carbs | orange | `#f97316` |
-| Fat | yellow | `#eab308` |
-| Water | sky | `#0ea5e9` |
+| Calories | green  | `#10b981` |
+| Protein  | purple | `#a855f7` |
+| Carbs    | orange | `#f97316` |
+| Fat      | yellow | `#eab308` |
+| Water    | blue   | `#3b82f6` |
 
 Always use these exact colors for these exact nutrients. Never swap them.
 

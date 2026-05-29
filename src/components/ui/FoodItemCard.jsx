@@ -17,7 +17,7 @@ export default function FoodItemCard({ food, onAdd, onAction, actionIcon }) {
         )}
         <div className="flex items-center gap-3 mt-1">
           <span className="flex items-center gap-1 text-sm text-text-secondary">
-            <span className="w-2 h-2 rounded-full bg-blue flex-shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-purple flex-shrink-0" />
             P {Math.round(food.proteinPer100g)}g
           </span>
           <span className="flex items-center gap-1 text-sm text-text-secondary">
@@ -32,7 +32,7 @@ export default function FoodItemCard({ food, onAdd, onAction, actionIcon }) {
       </div>
       <button
         onClick={handleClick}
-        className="w-10 h-10 bg-green rounded-xl flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity"
+        className="w-10 h-10 bg-green rounded-xl flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer"
       >
         {icon}
       </button>

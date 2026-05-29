@@ -37,9 +37,9 @@
 [x] 16. Auth frontend pages
 [x] 17. Onboarding frontend
 [x] 18. Layout shell (BottomNav + Sidebar) + remaining shared components
-[ ] 19. Use another food API
-[ ] 20. Food search + Favourite foods frontend
-[ ] 21. Food log + Copy day frontend
+[x] 19. Use another food API
+[x] 20. Food search + Favourite foods frontend
+[x] 21. Food log + Copy day frontend
 [ ] 22. Water tracking frontend
 [ ] 23. Weight tracking frontend
 [ ] 24. Goals frontend
@@ -142,6 +142,29 @@
 - MobileHeader: fixed h-14, pt-14 on main content to clear it
 -UserAvatar component duplicated in Sidebar and MobileHeader — extract to src/components/ui/UserAvatar.jsx during polish pass
 
+-Decision locked: Protein = purple (#a855f7), Water = blue (#3b82f6). Applied everywhere. Never use blue for protein again.
+
+- Steps 20 and 21 merged into a single page — FoodLog.jsx
+- Food Log uses "Logged | Favourites" tab pattern — no stacked sections
+- Custom dark-themed inline calendar date picker — calendar icon next to date label
+- Inline card expansion for logging — no modal, no drawer. Grams input + macro preview appear below the card row
+- Only one card expanded at a time — expanding a second collapses the first
+- Favourites live on the Food Log page as a tab, not a separate route
+- Dashboard calendar heatmap: green = calories within 10% of goal, macro dots as secondary indicators, clicking navigates to /log?date=YYYY-MM-DD — build at step 25
+- Food Log must read date from URL query param when navigating from Dashboard calendar — update at step 25
+- Macro summary strip: mobile = ring centered top + 4 metrics stacked. Desktop = ring left + 4 column grid
+- Water added to macro summary strip — reads from dashboard daily response, no extra API call
+- Nutrient color mapping locked permanently: Calories = green, Protein = purple, Carbs = orange, Fat = yellow, Water = -blue. Never deviate.
+- -color-water and --color-water-bg removed from theme — water uses bg-blue/text-blue
+- -color-bg-page changed from #0f0f0f to #161616 — better separation between page background and cards (#1a1a1
+
+- Dashboard daily summary endpoint is /api/dashboard/summary not /api/dashboard/daily — use this everywhere
+- Vite proxy must be configured — /api → http://localhost:8080. Without it all API calls bypass the proxy
+- DatePicker is a shared component at src/components/ui/DatePicker.jsx — uses parseISO from date-fns, smart up/down positioning
+- Food Log split into 4 files: FoodLog.jsx (page), ExpandableFoodCard.jsx, LoggedEntry.jsx, DatePicker.jsx
+- ExpandableFoodCard has meal selector + date text input (dd/mm/yyyy) — date only affects that log entry, not the page
+- CalorieRing rounds to whole numbers — backend returns doubles
+- Mobile CalorieRing size: 140px. Desktop: 100px
 
 ---
 
@@ -164,6 +187,8 @@ src/components/ui/Input.jsx
 src/components/ui/Button.jsx
 src/components/ui/AuthShell.jsx
 src/components/ui/RadioCard.jsx
+src/components/ui/CalorieRing.jsx
+src/components/ui/DatePicker.jsx
 
 
 src/components/layout/BottomNav.jsx
@@ -186,9 +211,8 @@ src/pages/onboarding/StepGoals.jsx
 src/pages/onboarding/StepSuggestion.jsx
 
 
-src/pages/food-log/FoodLogView.jsx
-src/pages/food-log/FoodLogTable.jsx
-src/pages/food-log/FoodLogCard.jsx
+src/pages/food-log/ExpandableFoodCard.jsx
+src/pages/food-log/LoggedEntry.jsx
 src/pages/food-log/FoodLog.jsx
 
 Backend
@@ -260,18 +284,14 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 19 - Figuring out the food api we are going to use / food frontend
+Step 22 — Water tracking frontend
+
 ---
 
 ## Known Issues / Blockers
 
-- No reference design exists yet for BottomNav/Sidebar — need to design from scratch based on DESIGN.md spec
-- DESIGN.md says mobile nav: Dashboard | Log | Trends | Goals | Settings (5 items)
-- DESIGN.md says desktop: sidebar, hidden md:flex
-- Active state: white icon + green dot indicator, never full green icon
-- Must confirm desktop sidebar nav labels and icons with user before writing any code
-- Step 18 blocked — user will present nav/sidebar design before any code is written.
-- Do not start Step 18 until design is confirmed.
+- Food Log must read date from URL query param when navigating from Dashboard calendar — update at step 25
+- FoodLogView.jsx, FoodLogTable.jsx, FoodLogCard.jsx are superseded by FoodLog.jsx — remove from repo
 
 
 ---
@@ -293,6 +313,7 @@ Step 19 - Figuring out the food api we are going to use / food frontend
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
+- Edit food log entry — let user change amountGrams on an existing logged entry. Inline edit on LoggedEntry.jsx row.    Implement during polish pass.
 ---
 
 ## How To Use This File
