@@ -12,6 +12,10 @@ import ResetPassword from './pages/auth/ResetPassword'
 import Onboarding from './pages/onboarding/Onboarding'
 import Favourites from './pages/favourites/Favourites'
 import FoodLog from './pages/food-log/FoodLog'
+import Dashboard from './pages/dashboard/Dashboard'
+import Settings from './pages/settings/Settings'
+
+
 
 function ProtectedRoute({ children, shell = true }) {
   const { isAuthenticated, loading } = useAuth()
@@ -78,13 +82,11 @@ function AppInner() {
         <Route path="/onboarding" element={<ProtectedRoute shell={false}><Onboarding /></ProtectedRoute>} />
 
         {/* App pages — protected + shell */}
-        <Route path="/dashboard" element={<ProtectedRoute><PlaceholderPage label="Dashboard" /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/log"       element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
         <Route path="/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-        <Route path="/trends"    element={<ProtectedRoute><PlaceholderPage label="Trends" /></ProtectedRoute>} />
-        <Route path="/goals"     element={<ProtectedRoute><PlaceholderPage label="Goals" /></ProtectedRoute>} />
-        <Route path="/settings"  element={<ProtectedRoute><PlaceholderPage label="Settings" /></ProtectedRoute>} />
-        <Route path="/profile"   element={<ProtectedRoute><PlaceholderPage label="Profile" /></ProtectedRoute>} />
+        <Route path="/ai" element={<ProtectedRoute><PlaceholderPage label="AI" /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

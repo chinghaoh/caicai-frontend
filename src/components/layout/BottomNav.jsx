@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, PlusCircle, TrendingUp, Target, Settings } from 'lucide-react'
+import { LayoutDashboard, PlusCircle, TrendingUp, Settings, Sparkles } from 'lucide-react'
+
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   { label: 'Log',       icon: PlusCircle,      path: '/log'       },
-  { label: 'Trends',    icon: TrendingUp,      path: '/trends'    },
-  { label: 'Goals',     icon: Target,          path: '/goals'     },
+  { label: 'AI', icon: Sparkles, path: '/ai' },
   { label: 'Settings',  icon: Settings,        path: '/settings'  },
 ]
 

@@ -1,12 +1,11 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, PlusCircle, TrendingUp, Target, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, PlusCircle, Sparkles, Settings, LogOut } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   { label: 'Log',       icon: PlusCircle,      path: '/log'       },
-  { label: 'Trends',    icon: TrendingUp,      path: '/trends'    },
-  { label: 'Goals',     icon: Target,          path: '/goals'     },
+  { label: 'AI', icon: Sparkles, path: '/ai' },
   { label: 'Settings',  icon: Settings,        path: '/settings'  },
 ]
 
@@ -66,7 +65,7 @@ export default function Sidebar() {
       {/* Bottom — user card → /profile, logout inline */}
       {user && (
         <div className="border-t border-border px-4 py-3 flex items-center gap-3">
-          <NavLink to="/profile" className="flex-shrink-0">
+          <NavLink to="/settings" className="flex-shrink-0">
             <UserAvatar name={user.name} />
           </NavLink>
           <div className="min-w-0 flex-1">

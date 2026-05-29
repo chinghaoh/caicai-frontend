@@ -41,10 +41,16 @@
 [x] 20. Food search + Favourite foods frontend
 [x] 21. Food log + Copy day frontend
 [x] 22. Water tracking frontend
-[ ] 23. Weight tracking frontend
-[ ] 24. Goals frontend
-[ ] 25. Dashboard frontend
-[ ] 26. Settings frontend
+[x] 23. Weight tracking frontend
+[x] 24. Goals frontend
+[x] 25. Dashboard frontend
+[x] 26. Settings frontend
+[]  27. Finish backlog 
+[]  28  Create demo
+[]  29. create tests
+[]  30. upload to aws
+[]  31. setup github actions
+
 ```
 
 ---
@@ -166,6 +172,23 @@
 - CalorieRing rounds to whole numbers — backend returns doubles
 - Mobile CalorieRing size: 140px. Desktop: 100px
 
+- Steps 23, 24, 25 merged — Weight + Goals + Dashboard are one page at /dashboard
+- Goals nav item removed — nav is now Dashboard | Log | Trends | Settings (4 items)
+- CalorieRing shows calories consumed tracking up toward goal, label is "KCAL" not "KCAL LEFT"
+- Dashboard split into 4 files: Dashboard.jsx, MacroCard.jsx, WeightSection.jsx, WeightChart.jsx
+- MacroCard lives in src/pages/dashboard/ — not promoted to shared ui/
+- Weight change color is goal-aware — green = toward goal, red = away from goal
+- WeightService.java stores LocalDateTime.now() instead of date.atStartOfDay() — fixes same-day sort order
+- Weight chart uses last 30 days, averaged per day — multiple logs per day collapse to one point
+- Weight history table shows all entries, paginated at 5 per page
+- ChangeLabel and build30DayChartData defined outside component to avoid hydration errors
+- max-w-4xl removed from Dashboard — full width
+
+- /profile route removed — Sidebar and MobileHeader avatar both link to /settings
+- Settings has 3 tabs: Profile / Goals / Account
+- /settings?tab=goals — URL param drives active tab, "Update Goals" on Dashboard navigates here
+- No inline password change — Account tab sends forgot-password email instead
+- Ai suggestion = coming soon placeholder for now
 ---
 
 ## Files Created So Far
@@ -216,6 +239,16 @@ src/pages/onboarding/StepSuggestion.jsx
 src/pages/food-log/ExpandableFoodCard.jsx
 src/pages/food-log/LoggedEntry.jsx
 src/pages/food-log/FoodLog.jsx
+
+src/pages/dashboard/Dashboard.jsx
+src/pages/dashboard/MacroCard.jsx
+src/pages/dashboard/WeightSection.jsx
+src/pages/dashboard/WeightChart.jsx
+
+src/pages/settings/Settings.jsx
+src/pages/settings/ProfileTab.jsx
+src/pages/settings/GoalsTab.jsx
+src/pages/settings/AccountTab.jsx
 
 Backend
 
@@ -286,7 +319,13 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 23 — Weight tracking frontend
+Step 31 — Backlog cleanup + polish
+
+## Remaining Steps (in order)
+31. Backlog cleanup (dead files, UserAvatar extraction, nav fixes, AI placeholder route)
+32. Demo button (copy from existing project)
+33. Create tests
+34. Upload to AWS
 
 ---
 
@@ -316,6 +355,11 @@ Step 23 — Weight tracking frontend
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
 - Edit food log entry — let user change amountGrams on an existing logged entry. Inline edit on LoggedEntry.jsx row.    Implement during polish pass.
+- Weight chart UX — sparse with few data points, x-axis labels repeat. Add minimum data threshold before showing chart, and time range toggle (30d / 3m / 6m / All) once enough data exists.
+- Trends page — weekly/monthly charts using existing dashboard endpoints
+- AI goal re-suggestion from within the app
+- AI food recommendations based on remaining daily macros
+- Edit email in the settings
 ---
 
 ## How To Use This File
