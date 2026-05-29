@@ -16,9 +16,8 @@ function ProgressBar({ current, total }) {
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
-          className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-            i < current ? 'bg-green' : 'bg-border'
-          }`}
+          className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i < current ? 'bg-green' : 'bg-border'
+            }`}
         />
       ))}
     </div>
@@ -29,23 +28,23 @@ export default function Onboarding() {
   const navigate = useNavigate()
   const { completeOnboarding } = useAuth()
 
-  const [step, setStep]             = useState(1)
-  const [loading, setLoading]       = useState(false)
-  const [saving, setSaving]         = useState(false)
-  const [errors, setErrors]         = useState({})
-  const [saveError, setSaveError]   = useState('')
-  const [adjusting, setAdjusting]   = useState(false)
+  const [step, setStep] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [errors, setErrors] = useState({})
+  const [saveError, setSaveError] = useState('')
+  const [adjusting, setAdjusting] = useState(false)
   const [suggestion, setSuggestion] = useState(null)
-  const [adjusted, setAdjusted]     = useState(null)
+  const [adjusted, setAdjusted] = useState(null)
 
   const [formData, setFormData] = useState({
-    gender:         '',
-    age:            '',
-    heightCm:       '',
-    weightKg:       '',
-    goalType:       '',
+    gender: '',
+    age: '',
+    heightCm: '',
+    weightKg: '',
+    goalType: '',
     targetWeightKg: '',
-    activityLevel:  '',
+    activityLevel: '',
   })
 
   function handleChange(field, value) {
@@ -113,12 +112,12 @@ export default function Onboarding() {
       const data = await apiClient('/api/goals/suggest', {
         method: 'POST',
         body: {
-          age:            parseInt(formData.age),
-          weightKg:       parseFloat(formData.weightKg),
-          heightCm:       parseInt(formData.heightCm),
-          gender:         formData.gender,
-          activityLevel:  formData.activityLevel,
-          goalType:       formData.goalType,
+          age: parseInt(formData.age),
+          weightKg: parseFloat(formData.weightKg),
+          heightCm: parseInt(formData.heightCm),
+          gender: formData.gender,
+          activityLevel: formData.activityLevel,
+          goalType: formData.goalType,
           targetWeightKg: parseFloat(formData.targetWeightKg),
         },
       })
@@ -126,7 +125,6 @@ export default function Onboarding() {
       setAdjusted(data)
       setStep(3)
     } catch {
-      // AI failed — fall through to manual entry
       setSuggestion(null)
       setAdjusted({ calories: '', protein: '', carbs: '', fat: '', waterMl: '' })
       setAdjusting(true)
@@ -144,13 +142,13 @@ export default function Onboarding() {
       await apiClient('/api/goals', {
         method: 'POST',
         body: {
-          calories:         parseInt(goals.calories),
-          protein:          parseInt(goals.protein),
-          carbs:            parseInt(goals.carbs),
-          fat:              parseInt(goals.fat),
-          waterMl:          parseInt(goals.waterMl),
+          calories: parseInt(goals.calories),
+          protein: parseInt(goals.protein),
+          carbs: parseInt(goals.carbs),
+          fat: parseInt(goals.fat),
+          waterMl: parseInt(goals.waterMl),
           startingWeightKg: parseFloat(formData.weightKg),
-          targetWeightKg:   parseFloat(formData.targetWeightKg),
+          targetWeightKg: parseFloat(formData.targetWeightKg),
         },
       })
       completeOnboarding()
@@ -163,15 +161,16 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-page flex flex-col">
+    <div className="min-h-screen bg-bg-page flex flex-col items-center justify-center px-4 py-10"
+    style={{ background: 'radial-gradient(ellipse 80% 60% at 0% 0%, #052e16 0%, #0f0f0f 60%)' }}
+    >
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-12 pb-4">
+      <div className="w-full max-w-3xl flex items-center justify-between mb-4">
         <button
           onClick={step > 1 ? handleBack : undefined}
-          className={`flex items-center gap-1 text-base font-semibold text-green cursor-pointer ${
-            step === 1 ? 'invisible' : ''
-          }`}
+          className={`flex items-center gap-1 text-base font-semibold text-green cursor-pointer ${step === 1 ? 'invisible' : ''
+            }`}
         >
           <ChevronLeft size={18} />
           Caicai
@@ -187,12 +186,14 @@ export default function Onboarding() {
       </div>
 
       {/* Progress bar */}
-      <div className="px-4 mb-6">
+      <div className="w-full max-w-3xl mb-6">
         <ProgressBar current={step} total={TOTAL_STEPS} />
       </div>
 
-      {/* Step content */}
-      <div className="flex-1 px-4 pt-4 overflow-y-auto pb-6">
+      {/* Card */}
+      <div className="w-full max-w-3xl bg-bg-card rounded-xl p-6 flex flex-col gap-6">
+
+        {/* Step content */}
         {step === 1 && (
           <StepBasics data={formData} onChange={handleChange} errors={errors} />
         )}
@@ -211,17 +212,15 @@ export default function Onboarding() {
             error={saveError}
           />
         )}
-      </div>
 
-      {/* Bottom CTA — steps 1 and 2 only */}
-      {step < 3 && (
-        <div className="px-4 pb-8 pt-4">
+        {/* Continue button — steps 1 and 2 only */}
+        {step < 3 && (
           <Button onClick={handleNext} loading={loading} fullWidth>
             Continue
           </Button>
-        </div>
-      )}
+        )}
 
+      </div>
     </div>
   )
 }

@@ -35,7 +35,7 @@
 [x] 14. Shared frontend components — partial (Input, Button, AuthShell, StatCard, PageHeader, EmptyState, FilterPills, FoodItemCard, Pagination, LoadingSpinner, ProgressBar, MacroBadge, RadioCard)
 [x] 15. apiClient + SessionExpiredModal
 [x] 16. Auth frontend pages
-[ ] 17. Onboarding frontend
+[x] 17. Onboarding frontend
 [ ] 18. Layout shell (BottomNav + Sidebar) + remaining shared components
 [ ] 19. Use another food API
 [ ] 20. Food search + Favourite foods frontend
@@ -128,6 +128,10 @@
 - Inline style used for radial gradient (#052e16 → #0f0f0f) — no Tailwind utility covers this
 - Input accepts optional labelAction prop for inline label-row elements
 - PROJECT_STATUS.md summary provided at end of task, not after every file
+
+- Onboarding layout: centered max-w-3xl card, header + progress bar outside card, justify-center on outer div
+- Onboarding background: same radial gradient as AuthShell (radial-gradient(ellipse 80% 60% at 0% 0%, #052e16 0%, #0f0f0f 60%)), applied inline — no separate component yet
+- Onboarding desktop fix was layout-only — no logic changes, all three step files untouched
 ---
 
 ## Files Created So Far
@@ -237,14 +241,19 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 14 — Frontend rebuild based on new designs (starting after designs are ready)
+Step 18 — Layout shell (BottomNav + Sidebar) + remaining shared components
 ---
 
 ## Known Issues / Blockers
 
-_Anything broken, unclear, or blocking progress._
+- No reference design exists yet for BottomNav/Sidebar — need to design from scratch based on DESIGN.md spec
+- DESIGN.md says mobile nav: Dashboard | Log | Trends | Goals | Settings (5 items)
+- DESIGN.md says desktop: sidebar, hidden md:flex
+- Active state: white icon + green dot indicator, never full green icon
+- Must confirm desktop sidebar nav labels and icons with user before writing any code
+- Step 18 blocked — user will present nav/sidebar design before any code is written.
+- Do not start Step 18 until design is confirmed.
 
-None.
 
 ---
 
