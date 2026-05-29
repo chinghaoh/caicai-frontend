@@ -4,6 +4,7 @@ import { setSessionExpiredHandler } from './apiClient'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import SessionExpiredModal from './components/ui/SessionExpiredModal'
 import LoadingSpinner from './components/ui/LoadingSpinner'
+import AppShell from './components/layout/AppShell'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import ForgotPassword from './pages/auth/ForgotPassword'
@@ -11,7 +12,8 @@ import ResetPassword from './pages/auth/ResetPassword'
 import Onboarding from './pages/onboarding/Onboarding'
 import Favourites from './pages/favourites/Favourites'
 import FoodLog from './pages/food-log/FoodLog'
-function ProtectedRoute({ children }) {
+
+function ProtectedRoute({ children, shell = true }) {
   const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
@@ -26,7 +28,8 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />
   }
 
-  return children
+  if (!shell) return children
+  return <AppShell>{children}</AppShell>
 }
 
 function AuthRoute({ children }) {
@@ -47,10 +50,10 @@ function AuthRoute({ children }) {
   return children
 }
 
-function PlaceholderDashboard() {
+function PlaceholderPage({ label }) {
   return (
-    <div className="min-h-screen bg-bg-page flex items-center justify-center">
-      <p className="text-text-muted text-sm">Dashboard coming soon.</p>
+    <div className="flex items-center justify-center py-32">
+      <p className="text-text-muted text-sm">{label} — coming soon.</p>
     </div>
   )
 }
@@ -65,15 +68,23 @@ function AppInner() {
   return (
     <div className="min-h-screen bg-bg-page">
       <Routes>
+        {/* Auth pages — no shell */}
         <Route path="/login"           element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/register"        element={<AuthRoute><Register /></AuthRoute>} />
         <Route path="/forgot-password" element={<AuthRoute><ForgotPassword /></AuthRoute>} />
         <Route path="/reset-password"  element={<AuthRoute><ResetPassword /></AuthRoute>} />
 
-        <Route path="/onboarding"  element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-        <Route path="/dashboard"   element={<ProtectedRoute><PlaceholderDashboard /></ProtectedRoute>} />
-        <Route path="/favourites"  element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-        <Route path="/log"    element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
+        {/* Onboarding — protected but no shell (full-screen flow) */}
+        <Route path="/onboarding" element={<ProtectedRoute shell={false}><Onboarding /></ProtectedRoute>} />
+
+        {/* App pages — protected + shell */}
+        <Route path="/dashboard" element={<ProtectedRoute><PlaceholderPage label="Dashboard" /></ProtectedRoute>} />
+        <Route path="/log"       element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
+        <Route path="/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
+        <Route path="/trends"    element={<ProtectedRoute><PlaceholderPage label="Trends" /></ProtectedRoute>} />
+        <Route path="/goals"     element={<ProtectedRoute><PlaceholderPage label="Goals" /></ProtectedRoute>} />
+        <Route path="/settings"  element={<ProtectedRoute><PlaceholderPage label="Settings" /></ProtectedRoute>} />
+        <Route path="/profile"   element={<ProtectedRoute><PlaceholderPage label="Profile" /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

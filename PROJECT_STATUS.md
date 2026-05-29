@@ -36,7 +36,7 @@
 [x] 15. apiClient + SessionExpiredModal
 [x] 16. Auth frontend pages
 [x] 17. Onboarding frontend
-[ ] 18. Layout shell (BottomNav + Sidebar) + remaining shared components
+[x] 18. Layout shell (BottomNav + Sidebar) + remaining shared components
 [ ] 19. Use another food API
 [ ] 20. Food search + Favourite foods frontend
 [ ] 21. Food log + Copy day frontend
@@ -132,6 +132,17 @@
 - Onboarding layout: centered max-w-3xl card, header + progress bar outside card, justify-center on outer div
 - Onboarding background: same radial gradient as AuthShell (radial-gradient(ellipse 80% 60% at 0% 0%, #052e16 0%, #0f0f0f 60%)), applied inline — no separate component yet
 - Onboarding desktop fix was layout-only — no logic changes, all three step files untouched
+
+- /profile — read-only profile page (name, member since, weight progress, nutrition goals, personal details)
+- /settings — account actions only (change email, change password, delete account)
+- Desktop: sidebar user card + name link to /profile. Logout is inline below name in same card.
+- Mobile: MobileHeader avatar links to /profile. Logout lives inside /profile page at the bottom.
+- No /profile/:userId — no social features, revisit if ever scoped
+- Page title removed from Sidebar — pages own their own titles in content area
+- MobileHeader: fixed h-14, pt-14 on main content to clear it
+-UserAvatar component duplicated in Sidebar and MobileHeader — extract to src/components/ui/UserAvatar.jsx during polish pass
+
+
 ---
 
 ## Files Created So Far
@@ -152,14 +163,22 @@ src/components/ui/SessionExpiredModal.jsx
 src/components/ui/Input.jsx
 src/components/ui/Button.jsx
 src/components/ui/AuthShell.jsx
+src/components/ui/RadioCard.jsx
+
+
+src/components/layout/BottomNav.jsx
+src/components/layout/Sidebar.jsx
+src/components/layout/AppShell.jsx
+src/components/layout/MobileHeader.js
+
 src/apiClient.js
 src/App.jsx
+
 src/pages/auth/Login.jsx
 src/pages/auth/Register.jsx
 src/pages/auth/ForgotPassword.jsx
 src/pages/auth/ResetPassword.jsx
 
-src/components/ui/RadioCard.jsx
 src/context/AuthContext.jsx
 src/pages/onboarding/Onboarding.jsx
 src/pages/onboarding/StepBasics.jsx

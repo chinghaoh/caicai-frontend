@@ -13,7 +13,7 @@ A weight management and nutrition tracking web app. Users log meals, track macro
 - Frontend: React (Vite), Tailwind CSS with custom `@theme` variables, date-fns
 - Infrastructure: AWS EC2, RDS PostgreSQL, ElastiCache Redis, S3 + CloudFront, GitHub Actions CI/CD
 - AI: Anthropic Claude API (goal suggestions only)
-- External API: OpenFoodFacts (food search, cached in Redis + PostgreSQL)
+- External API: OpenFoodFacts (current, under review — see Food API section)
 
 ---
 
@@ -96,6 +96,26 @@ Never skip steps. Never build out of order.
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
+
+---
+
+## Food API — Pending Decision
+
+Current implementation uses OpenFoodFacts. Known issues: aggressive rate limiting,
+inconsistent data quality, no SLA.
+
+Candidates evaluated:
+- USDA FoodData Central — free, government-verified, 1,000 req/hour, US-focused,
+  free data.gov API key required. Best for accuracy.
+- Edamam — free tier ~1,000 calls/month (too low for production), paid from $49/month.
+- Nutritionix — free tier 500 calls/day (too low for production), US + branded foods.
+- Open Food Facts (current) — best international coverage, unreliable rate limits.
+
+Leading option: USDA FoodData Central as primary + Open Food Facts as fallback.
+Gives US accuracy + international coverage. Redis cache reduces live API calls significantly.
+
+Decision deferred — implement as Step 19 before food search frontend.
+FoodItemResponse DTO shape must stay identical — frontend is unaffected by the swap.
 
 ---
 
