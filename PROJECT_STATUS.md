@@ -260,7 +260,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 18 — Layout shell (BottomNav + Sidebar) + remaining shared components
+Step 19 - Figuring out the food api we are going to use / food frontend
 ---
 
 ## Known Issues / Blockers
