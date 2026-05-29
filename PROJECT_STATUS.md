@@ -40,7 +40,7 @@
 [x] 19. Use another food API
 [x] 20. Food search + Favourite foods frontend
 [x] 21. Food log + Copy day frontend
-[ ] 22. Water tracking frontend
+[x] 22. Water tracking frontend
 [ ] 23. Weight tracking frontend
 [ ] 24. Goals frontend
 [ ] 25. Dashboard frontend
@@ -196,6 +196,8 @@ src/components/layout/Sidebar.jsx
 src/components/layout/AppShell.jsx
 src/components/layout/MobileHeader.js
 
+src/components/water/WaterModal.jsx
+
 src/apiClient.js
 src/App.jsx
 
@@ -284,7 +286,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 22 — Water tracking frontend
+Step 23 — Weight tracking frontend
 
 ---
 

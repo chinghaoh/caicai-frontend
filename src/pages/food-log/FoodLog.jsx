@@ -9,6 +9,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ProgressBar from '@/components/ui/ProgressBar'
 import PageHeader from '@/components/ui/PageHeader'
 import DatePicker from '@/components/ui/DatePicker'
+import WaterModal from '@/components/water/WaterModel'
 import ExpandableFoodCard from './ExpandableFoodCard'
 import LoggedEntry from './LoggedEntry'
 
@@ -34,6 +35,7 @@ export default function FoodLog() {
   const [favourites, setFavourites]         = useState([])
   const [favouriteIds, setFavouriteIds]     = useState(new Set())
   const [expandedId, setExpandedId]         = useState(null)
+  const [waterModalOpen, setWaterModalOpen] = useState(false)
   const debounceRef                         = useRef(null)
 
   const fetchSummary = useCallback(async () => {
@@ -121,10 +123,18 @@ export default function FoodLog() {
   const isSearchActive = query.length >= 2
 
   const METRICS = [
-    { label: 'Protein', value: Math.round(totals.protein), max: goal.protein, unit: 'g', color: 'text-purple', bar: 'bg-purple' },
-    { label: 'Carbs',   value: Math.round(totals.carbs),   max: goal.carbs,   unit: 'g', color: 'text-orange', bar: 'bg-orange' },
-    { label: 'Fat',     value: Math.round(totals.fat),     max: goal.fat,     unit: 'g', color: 'text-yellow', bar: 'bg-yellow' },
-    { label: 'Water',   value: Math.round((totals.waterMl ?? 0) / 100) / 10, max: Math.round((goal.waterMl ?? 2500) / 100) / 10, unit: 'L', color: 'text-blue', bar: 'bg-blue' },
+    { label: 'Protein', value: Math.round(totals.protein), max: goal.protein, unit: 'g', color: 'text-purple', bar: 'bg-purple', clickable: false },
+    { label: 'Carbs',   value: Math.round(totals.carbs),   max: goal.carbs,   unit: 'g', color: 'text-orange', bar: 'bg-orange', clickable: false },
+    { label: 'Fat',     value: Math.round(totals.fat),     max: goal.fat,     unit: 'g', color: 'text-yellow', bar: 'bg-yellow', clickable: false },
+    {
+      label: 'Water',
+      value: Math.round((totals.waterMl ?? 0) / 100) / 10,
+      max: Math.round((goal.waterMl ?? 2500) / 100) / 10,
+      unit: 'L',
+      color: 'text-blue',
+      bar: 'bg-blue',
+      clickable: true,
+    },
   ]
 
   function renderFoodCards(foods, emptyIcon, emptyTitle, emptyDesc) {
@@ -186,7 +196,11 @@ export default function FoodLog() {
               <CalorieRing value={totals.calories} goal={goal.calories} size={140} strokeWidth={8} />
               <div className="w-full flex flex-col gap-3">
                 {METRICS.map(m => (
-                  <div key={m.label}>
+                  <div
+                    key={m.label}
+                    onClick={m.clickable ? () => setWaterModalOpen(true) : undefined}
+                    className={m.clickable ? 'cursor-pointer' : undefined}
+                  >
                     <div className="flex justify-between text-sm mb-1">
                       <span className={`font-medium ${m.color}`}>{m.label}</span>
                       <span className="text-text-muted">{m.value}{m.unit} / {m.max}{m.unit}</span>
@@ -201,7 +215,11 @@ export default function FoodLog() {
               <CalorieRing value={totals.calories} goal={goal.calories} size={100} strokeWidth={8} />
               <div className="flex-1 grid grid-cols-4 gap-4">
                 {METRICS.map(m => (
-                  <div key={m.label}>
+                  <div
+                    key={m.label}
+                    onClick={m.clickable ? () => setWaterModalOpen(true) : undefined}
+                    className={m.clickable ? 'cursor-pointer rounded-lg hover:bg-bg-input p-2 -m-2 transition-colors' : undefined}
+                  >
                     <span className={`text-sm font-medium ${m.color}`}>{m.label}</span>
                     <p className="text-sm text-text-muted mt-0.5">{m.value}{m.unit} / {m.max}{m.unit}</p>
                     <div className="mt-2"><ProgressBar value={m.value} max={m.max} color={m.bar} /></div>
@@ -243,45 +261,64 @@ export default function FoodLog() {
               {searching ? 'Searching...' : `${searchResults.length} result${searchResults.length !== 1 ? 's' : ''}`}
             </p>
             {searching
-              ? <div className="flex justify-center py-6"><LoadingSpinner /></div>
+              ? <div className="flex justify-center py-8"><LoadingSpinner /></div>
               : renderFoodCards(searchResults, '🔍', 'No results', `Nothing found for "${query}"`)
             }
           </section>
         ) : (
           <>
-            {/* Tabs */}
-            <div className="flex gap-1 mb-4 bg-bg-card rounded-xl p-1">
-              {[{ id: 'logged', label: 'Logged' }, { id: 'favourites', label: 'Favourites' }].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => { setActiveTab(tab.id); setExpandedId(null) }}
-                  className={`flex-1 py-2 rounded-lg text-base font-medium transition-colors cursor-pointer ${
-                    activeTab === tab.id ? 'bg-bg-input text-text-primary' : 'text-text-muted hover:text-text-secondary'
-                  }`}
-                >
-                  {tab.label}
-                  {tab.id === 'logged' && entriesForMeal.length > 0 && (
-                    <span className="ml-2 text-xs text-text-muted">{entriesForMeal.length}</span>
-                  )}
-                </button>
-              ))}
+            {/* Logged / Favourites tabs */}
+            <div className="flex mb-4 bg-bg-input rounded-xl overflow-hidden">
+              <button
+                onClick={() => setActiveTab('logged')}
+                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${
+                  activeTab === 'logged'
+                    ? 'bg-bg-card text-text-primary rounded-xl'
+                    : 'text-text-muted'
+                }`}
+              >
+                Logged {entriesForMeal.length > 0 && <span className="text-text-muted text-sm">{entriesForMeal.length}</span>}
+              </button>
+              <button
+                onClick={() => setActiveTab('favourites')}
+                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${
+                  activeTab === 'favourites'
+                    ? 'bg-bg-card text-text-primary rounded-xl'
+                    : 'text-text-muted'
+                }`}
+              >
+                Favourites
+              </button>
             </div>
 
-            {/* Tab content */}
             {activeTab === 'logged' ? (
-              entriesForMeal.length === 0
-                ? <EmptyState icon="🍽️" title="Nothing logged yet" description="Search for a food above or pick a favourite to log it." />
-                : <div className="flex flex-col gap-2">
+              <section>
+                {entriesForMeal.length === 0 ? (
+                  <EmptyState icon="🍽️" title="Nothing logged" description={`No ${activeMeal.toLowerCase()} entries yet.`} />
+                ) : (
+                  <div className="flex flex-col gap-2">
                     {entriesForMeal.map(entry => (
                       <LoggedEntry key={entry.id} entry={entry} onDelete={handleDelete} />
                     ))}
                   </div>
+                )}
+              </section>
             ) : (
-              renderFoodCards(favourites, '❤️', 'No favourites yet', 'Tap the heart on any food to save it here.')
+              <section>
+                {renderFoodCards(favourites, '⭐', 'No favourites yet', 'Star a food while searching to save it here.')}
+              </section>
             )}
           </>
         )}
       </div>
+
+      <WaterModal
+        isOpen={waterModalOpen}
+        onClose={() => setWaterModalOpen(false)}
+        date={date}
+        goalMl={goal.waterMl ?? 2500}
+        onUpdate={fetchSummary}
+      />
     </div>
   )
 }
