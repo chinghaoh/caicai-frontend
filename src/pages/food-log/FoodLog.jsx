@@ -83,6 +83,9 @@ export default function FoodLog() {
       method: 'POST',
       body: { foodItemId: foodId, amountGrams, mealType, date: logDate },
     })
+    setQuery('')
+    setSearchResults([])
+    setExpandedId(null)
     if (logDate === date) fetchSummary()
   }
 
@@ -280,8 +283,8 @@ export default function FoodLog() {
               <button
                 onClick={() => setActiveTab('logged')}
                 className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${activeTab === 'logged'
-                    ? 'bg-bg-card text-text-primary rounded-xl'
-                    : 'text-text-muted'
+                  ? 'bg-bg-card text-text-primary rounded-xl'
+                  : 'text-text-muted'
                   }`}
               >
                 Logged {entriesForMeal.length > 0 && <span className="text-text-muted text-sm">{entriesForMeal.length}</span>}
@@ -289,8 +292,8 @@ export default function FoodLog() {
               <button
                 onClick={() => setActiveTab('favourites')}
                 className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${activeTab === 'favourites'
-                    ? 'bg-bg-card text-text-primary rounded-xl'
-                    : 'text-text-muted'
+                  ? 'bg-bg-card text-text-primary rounded-xl'
+                  : 'text-text-muted'
                   }`}
               >
                 Favourites

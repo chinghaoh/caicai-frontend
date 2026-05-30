@@ -8,7 +8,7 @@
 ## Current Status
 
 **Phase:** started — ready to build  
-**Last updated:** 2026-05-29
+**Last updated:** 2026-05-30
 
 ---
 
@@ -45,8 +45,8 @@
 [x] 24. Goals frontend
 [x] 25. Dashboard frontend
 [x] 26. Settings frontend
-[]  27. Finish backlog 
-[]  28  Create demo
+[Work in progress]  27. Finish backlog 
+[x]  28  Create demo
 []  29. create tests
 []  30. upload to aws
 []  31. setup github actions
@@ -319,13 +319,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 31 — Backlog cleanup + polish
-
-## Remaining Steps (in order)
-31. Backlog cleanup
-32. Demo button (copy from existing project)
-33. Create tests
-34. Upload to AWS
+Step 31 — Create tests
 
 ---
 
@@ -338,15 +332,14 @@ Step 31 — Backlog cleanup + polish
 ---
 
 ## Backlog
+- AI goal re-suggestion from within the app
+- AI food recommendations based on remaining daily macros
 - Macro education tooltips — show a small info popup on each macro
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
-- Weight chart UX — sparse with few data points, x-axis labels repeat. Add minimum data threshold before showing chart, and time range toggle (30d / 3m / 6m / All) once enough data exists.
-- AI goal re-suggestion from within the app
-- AI food recommendations based on remaining daily macros
 - Edit email in the settings
 ---
 
