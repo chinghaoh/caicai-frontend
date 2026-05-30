@@ -48,7 +48,9 @@
 [Work in progress]  27. Finish backlog 
 [x] 28.  Create demo
 [x]  29. upload to aws
-[]  30. setup github actions
+[x]  30. setup github actions
+[]  31. work on backlog
+
 
 ```
 
@@ -324,7 +326,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 39 - srtup github actions
+Step 31 work on backlog
 
 ---
 

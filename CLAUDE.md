@@ -70,7 +70,7 @@ Never skip steps. Never build out of order.
 6.  apiClient + SessionExpiredModal
 7.  Auth frontend pages
 8.  Onboarding flow + AI goal suggestion
-9.  Food search (OpenFoodFacts + Redis cache)
+9.  Food search (FatSecret + Redis cache)
 10. Favourite foods
 11. Food log
 12. Copy day feature
@@ -102,48 +102,15 @@ Never skip steps. Never build out of order.
 
 ## Backlog
 
-- Edit food log entry — PUT /api/food-logs/{id}, change amountGrams and mealType. Frontend: edit modal. Implement during polish pass.
-- OpenFoodFacts replacement — find alternative food data API. Cached PostgreSQL data works in the meantime.
-- Need to rethink our current designs after the whole frontend has been implemented
-- Write backend service tests for all business logic once all backend steps are complete (steps 9–13).
-  Cover: calorie/macro totals, goal progress calculations, dashboard aggregations, date boundary edge cases, ownership checks.
-- AI food recommendations — suggest foods to user based on remaining
-  daily macro goals. Implement after dashboard is built (step 16).
-- Structured logging — add log levels and correlation IDs to make
-  debugging production issues easier. Implement before first
-  production deployment.
+- AI goal re-suggestion from within the app
+- AI food recommendations based on remaining daily macros
 - Macro education tooltips — show a small info popup on each macro
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
-- Edit food log entry — let user change amountGrams on an existing logged entry. Inline edit on LoggedEntry.jsx row.    Implement during polish pass.
-- Weight chart UX — sparse with few data points, x-axis labels repeat. Add minimum data threshold before showing chart, and time range toggle (30d / 3m / 6m / All) once enough data exists.
-- Trends page — weekly/monthly charts using existing dashboard endpoints
-- AI goal re-suggestion from within the app
-- AI food recommendations based on remaining daily macros
 - Edit email in the settings
-
----
-
-## Food API — Pending Decision
-
-Current implementation uses OpenFoodFacts. Known issues: aggressive rate limiting,
-inconsistent data quality, no SLA.
-
-Candidates evaluated:
-- USDA FoodData Central — free, government-verified, 1,000 req/hour, US-focused,
-  free data.gov API key required. Best for accuracy.
-- Edamam — free tier ~1,000 calls/month (too low for production), paid from $49/month.
-- Nutritionix — free tier 500 calls/day (too low for production), US + branded foods.
-- Open Food Facts (current) — best international coverage, unreliable rate limits.
-
-Leading option: USDA FoodData Central as primary + Open Food Facts as fallback.
-Gives US accuracy + international coverage. Redis cache reduces live API calls significantly.
-
-Decision deferred — implement as Step 19 before food search frontend.
-FoodItemResponse DTO shape must stay identical — frontend is unaffected by the swap.
 
 ---
 
@@ -151,7 +118,7 @@ FoodItemResponse DTO shape must stay identical — frontend is unaffected by the
 
 ```
 User
-├── FoodItem            (OpenFoodFacts cached + user created)
+├── FoodItem            (FatSecret cached + user created)
 ├── FoodLog             (userId, foodItemId, amountGrams, mealType, loggedAt)
 ├── WaterLog            (userId, amountMl, loggedAt)
 ├── WeightLog           (userId, weightKg, loggedAt)
@@ -171,9 +138,9 @@ isVerified, isDemo, createdAt
 id, name, brand,
 caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g,
 fiberPer100g, sugarPer100g, sodiumPer100g,
-source,        // OPENFOODFACTS | USER_CREATED
-externalId,    // OpenFoodFacts barcode/id, nullable
-createdBy,     // userId, nullable for OpenFoodFacts items
+source,        // FatSecret | USER_CREATED
+externalId,    // FatSecret barcode/id, nullable
+createdBy,     // userId, nullable for FatSecret items
 createdAt
 ```
 
@@ -417,7 +384,7 @@ GET /api/dashboard/monthly?date=2024-01-15
 
 ## Food Search Flow
 
-Live search with debounce + Redis cache. Never call OpenFoodFacts on every keystroke.
+Live search with debounce + Redis cache. Never call FatSecret on every keystroke.
 
 ```
 Frontend:
@@ -426,7 +393,7 @@ Frontend:
 Backend:
   1. Check Redis cache for query key
   2. Cache hit → return immediately
-  3. Cache miss → query OpenFoodFacts API
+  3. Cache miss → query FatSecret API
   4. Store results in Redis (TTL: 24 hours)
   5. Store new FoodItems in PostgreSQL
   6. Return results
@@ -437,7 +404,7 @@ Backend:
 **Search result ordering:**
 1. User's favourite foods that match the query (top)
 2. Previously logged foods that match the query
-3. OpenFoodFacts / cached results
+3. FatSecret / cached results
 
 ---
 
@@ -997,21 +964,21 @@ Never add a Redis health check that degrades gracefully locally. If Redis is dow
 
 Secure cookies only transmit over HTTPS. Production runs over HTTPS via CloudFront. Local runs over HTTP. If `APP_COOKIE_SECURE=true` locally, auth silently breaks — cookies are set but never sent. Always verify this flag when debugging auth issues locally.
 
-### OpenFoodFacts — Graceful Degradation
-If OpenFoodFacts is unreachable (down, slow, or rate limited):
+### FatSecret — Graceful Degradation
+If FatSecret is unreachable (down, slow, or rate limited):
 - Return whatever exists in Redis cache or PostgreSQL
 - Never throw a 500 — return empty results gracefully
 - Log the failure server-side with the error details
 - Never block the user from logging food they've searched before
 
 ```java
-// Wrap OpenFoodFacts call specifically — not a general catch-all
+// Wrap FatSecret call specifically — not a general catch-all
 try {
-    results = openFoodFactsClient.search(query);
+    results = FatSecretClient.search(query);
     cacheResults(query, results);
     saveNewItems(results);
 } catch (Exception e) {
-    log.warn("OpenFoodFacts unreachable for query '{}': {}", query, e.getMessage());
+    log.warn("FatSecret unreachable for query '{}': {}", query, e.getMessage());
     // fall through — return cached results only
 }
 return getCachedResults(query);
@@ -1131,7 +1098,7 @@ Both repos have GitHub Actions that auto-deploy on push to `main`.
 20. **Food search debounce is 300ms** — never fire on every keystroke
 21. **Redis is required locally** — app fails fast without it, never mock it
 22. **`APP_COOKIE_SECURE=false` locally** — secure cookies over HTTP silently breaks auth
-23. **OpenFoodFacts failures are non-fatal** — catch specifically, log, return cached results
+23. **FatSecret failures are non-fatal** — catch specifically, log, return cached results
 24. **Hibernate naming strategy doesn't handle numbers correctly** — caloriesPer100g becomes calories_per100g not   
     calories_per_100g. Always use explicit @Column(name = "...") for fields with numbers in the name.
 25. **To view live logs on EC2 : ssh into instance and run `tail -f ~/app.log`** . Always check logs before assuming production is broken.
