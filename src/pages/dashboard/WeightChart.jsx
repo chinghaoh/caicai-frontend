@@ -1,12 +1,28 @@
 import { useMemo } from 'react'
 import { format, parseISO } from 'date-fns'
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Dot, ReferenceLine
+} from 'recharts'
 
-export default function WeightChart({ entries }) {
+function CustomTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null
+  const { date, weightKg } = payload[0].payload
+  return (
+    <div className="bg-bg-card border border-border rounded-lg px-3 py-2 text-sm shadow-lg">
+      <p className="text-text-muted">{date}</p>
+      <p className="text-green font-semibold">{weightKg} kg</p>
+    </div>
+  )
+}
+
+export default function WeightChart({ entries, goalWeight }) {
   const points = useMemo(() => {
     if (!entries || entries.length === 0) return []
     return entries.map(e => ({
-      weight: e.weightKg,
-      date: parseISO(e.loggedAt),
+      weightKg: e.weightKg,
+      date: format(parseISO(e.loggedAt), 'MMM d'),
+      rawDate: e.loggedAt,
     }))
   }, [entries])
 
@@ -18,108 +34,71 @@ export default function WeightChart({ entries }) {
     )
   }
 
-  const W = 560
-  const H = 120
-  const PAD_LEFT = 40
-  const PAD_RIGHT = 8
-  const PAD_Y = 12
+  if (points.length < 3) {
+    return (
+      <div className="h-36 flex flex-col items-center justify-center gap-1">
+        <p className="text-sm text-text-muted">Log weight on 3 different days to see your trend</p>
+        <p className="text-xs text-text-muted">{points.length} of 3 days logged</p>
+      </div>
+    )
+  }
 
-  const weights = points.map(p => p.weight)
+  const weights = points.map(p => p.weightKg)
   const minW = Math.min(...weights)
   const maxW = Math.max(...weights)
-  const range = maxW - minW || 1
-  const yMin = minW - range * 0.2
-  const yMax = maxW + range * 0.2
-
-  const toX = i => PAD_LEFT + (i / (points.length - 1 || 1)) * (W - PAD_LEFT - PAD_RIGHT)
-  const toY = w => PAD_Y + (1 - (w - yMin) / (yMax - yMin)) * (H - PAD_Y * 2)
-
-  const pathD = points.reduce((acc, p, i) => {
-    const x = toX(i)
-    const y = toY(p.weight)
-    if (i === 0) return `M ${x} ${y}`
-    const prevX = toX(i - 1)
-    const prevY = toY(points[i - 1].weight)
-    const cpX = (prevX + x) / 2
-    return `${acc} C ${cpX} ${prevY}, ${cpX} ${y}, ${x} ${y}`
-  }, '')
-
-  const lastX = toX(points.length - 1)
-  const lastY = toY(points[points.length - 1].weight)
-
-  const yLabels = [
-    { value: maxW, y: toY(maxW) },
-    { value: Math.round((minW + maxW) / 2 * 10) / 10, y: toY((minW + maxW) / 2) },
-    { value: minW, y: toY(minW) },
-  ]
-
-  const xLabelIndices = points.length <= 2
-    ? [0, points.length - 1]
-    : [0, Math.floor((points.length - 1) / 2), points.length - 1]
+  const padding = Math.max((maxW - minW) * 0.3, 1)
+  const yMin = Math.floor(minW - padding)
+  const yMax = Math.ceil(maxW + padding)
 
   return (
-    <div className="w-full">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        {/* y-axis labels */}
-        {yLabels.map((l, i) => (
-          <text
-            key={i}
-            x={PAD_LEFT - 6}
-            y={l.y}
-            textAnchor="end"
-            dominantBaseline="middle"
-            fill="#737373"
-            fontSize="9"
-            fontFamily="inherit"
-          >
-            {l.value}
-          </text>
-        ))}
-
-        {/* dashed midline */}
-        {points.length > 1 && (
-          <line
-            x1={PAD_LEFT}
-            y1={H / 2}
-            x2={W - PAD_RIGHT}
-            y2={H / 2}
-            stroke="var(--color-border)"
-            strokeWidth="1"
+    <div className="w-full h-48">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 4 }}>
+          <CartesianGrid
             strokeDasharray="4 4"
+            stroke="var(--color-border)"
+            vertical={false}
           />
-        )}
-
-        {/* trend line */}
-        <path
-          d={pathD}
-          fill="none"
-          stroke="var(--color-green)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* dot on last point */}
-        <circle cx={lastX} cy={lastY} r="4" fill="var(--color-green)" />
-      </svg>
-
-      {/* x-axis labels */}
-      <div
-        className="flex justify-between mt-1"
-        style={{ paddingLeft: `${PAD_LEFT}px`, paddingRight: `${PAD_RIGHT}px` }}
-      >
-        {xLabelIndices.map((pointIndex, i) => (
-          <span key={i} className="text-xs text-text-muted">
-            {pointIndex === points.length - 1
-              ? 'Today'
-              : format(points[pointIndex].date, 'MMM d')}
-          </span>
-        ))}
-      </div>
+          <XAxis
+            dataKey="date"
+            tick={{ fill: '#737373', fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+            interval="preserveStartEnd"
+          />
+          <YAxis
+            domain={[yMin, yMax]}
+            tick={{ fill: '#737373', fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={v => `${v}kg`}
+            width={44}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--color-border)', strokeWidth: 1 }} />
+          <Line
+            type="monotone"
+            dataKey="weightKg"
+            stroke="var(--color-green)"
+            strokeWidth={2}
+            dot={false}
+            activeDot={<Dot r={4} fill="var(--color-green)" stroke="none" />}
+          />
+          {goalWeight != null && goalWeight >= yMin && goalWeight <= yMax && (
+            <ReferenceLine
+              y={goalWeight}
+              stroke="var(--color-green)"
+              strokeOpacity={0.4}
+              strokeWidth={1.5}
+              label={{
+                value: `Goal ${goalWeight}kg`,
+                position: 'insideTopRight',
+                fill: 'var(--color-green)',
+                fontSize: 11,
+              }}
+            />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   )
 }

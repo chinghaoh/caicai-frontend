@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Calendar } from 'lucide-react'
 import { apiClient } from '@/apiClient'
 import EmptyState from '@/components/ui/EmptyState'
 import Pagination from '@/components/ui/Pagination'
-import  WeightChart from './WeightChart'
+import DatePicker from '@/components/ui/DatePicker'
+import WeightChart from './WeightChart'
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -34,8 +35,10 @@ function ChangeLabel({ change, currentWeight, goalWeight }) {
   if (change === 0) return <span className="text-text-muted">0.0 kg</span>
 
   const towardsGoal = goalWeight != null
-    ? (change > 0 && currentWeight < goalWeight) || (change < 0 && currentWeight > goalWeight)
-    : change < 0
+  ? Math.abs(currentWeight - goalWeight) < 0.5 ||
+    (change > 0 && currentWeight < goalWeight) ||
+    (change < 0 && currentWeight > goalWeight)
+  : change < 0
 
   const color = towardsGoal ? 'text-green' : 'text-red'
   const sign = change > 0 ? '+' : ''
@@ -45,15 +48,19 @@ function ChangeLabel({ change, currentWeight, goalWeight }) {
 // ── component ─────────────────────────────────────────────────────────────────
 
 export default function WeightSection({ entries, goalWeight, onRefresh }) {
-  const [input, setInput] = useState('')
-  const [logging, setLogging] = useState(false)
-  const [error, setError] = useState(null)
-  const [page, setPage] = useState(1)
+  const today = format(new Date(), 'yyyy-MM-dd')
+
+  const [input, setInput]         = useState('')
+  const [date, setDate]           = useState(today)
+  const [showPicker, setShowPicker] = useState(false)
+  const [logging, setLogging]     = useState(false)
+  const [error, setError]         = useState(null)
+  const [page, setPage]           = useState(1)
   const PAGE_SIZE = 5
 
-  const current = entries.length > 0 ? entries[0].weightKg : null
-  const totalPages = Math.ceil(entries.length / PAGE_SIZE)
-  const preview = entries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const current      = entries.length > 0 ? entries[0].weightKg : null
+  const totalPages   = Math.ceil(entries.length / PAGE_SIZE)
+  const preview      = entries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
   const chartEntries = build30DayChartData(entries)
 
   useEffect(() => setPage(1), [entries])
@@ -71,10 +78,11 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
     try {
       await apiClient('/api/weight', {
         method: 'POST',
-        body: { weightKg: val, date: format(new Date(), 'yyyy-MM-dd') },
+        body: { weightKg: val, date },
       })
       setInput('')
-      onRefresh()
+      setDate(today)
+      await onRefresh()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -85,7 +93,7 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
   async function handleDelete(id) {
     try {
       await apiClient(`/api/weight/${id}`, { method: 'DELETE' })
-      onRefresh()
+      await onRefresh()
     } catch {
       // silent
     }
@@ -97,14 +105,14 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
       {/* stats row */}
       <div className="flex items-start justify-between">
         <div>
-          <p className=" text-text-muted uppercase tracking-wide">Current Weight</p>
+          <p className="text-sm text-text-muted uppercase tracking-wide">Current Weight</p>
           <p className="text-2xl font-bold text-text-primary mt-0.5">
             {current != null ? `${current} kg` : '— kg'}
           </p>
         </div>
         {goalWeight != null && (
           <div className="text-right">
-            <p className="text-text-muted uppercase tracking-wide">Target</p>
+            <p className="text-sm text-text-muted uppercase tracking-wide">Target</p>
             <p className="text-2xl font-bold text-green mt-0.5">{goalWeight} kg</p>
           </div>
         )}
@@ -124,6 +132,24 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
             onKeyDown={e => e.key === 'Enter' && handleLog()}
             className="flex-1 bg-bg-input text-text-primary placeholder-text-muted rounded-lg px-3 py-2 text-sm border border-transparent focus:outline-none focus:border-green"
           />
+          <div className="relative flex items-center gap-1.5 bg-bg-input rounded-lg px-3 py-2">
+            <span className="text-sm text-text-secondary whitespace-nowrap">
+              {date === today ? 'Today' : format(new Date(date), 'MMM d')}
+            </span>
+            <button
+              onClick={() => setShowPicker(p => !p)}
+              className="cursor-pointer text-text-muted hover:text-text-primary transition-colors"
+            >
+              <Calendar size={14} />
+            </button>
+            {showPicker && (
+              <DatePicker
+                selected={date}
+                onChange={d => { setDate(d); setShowPicker(false) }}
+                onClose={() => setShowPicker(false)}
+              />
+            )}
+          </div>
           <button
             onClick={handleLog}
             disabled={logging || !input}
@@ -136,7 +162,7 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
       </div>
 
       {/* chart */}
-      {chartEntries.length > 0 && <WeightChart entries={chartEntries} />}
+      {chartEntries.length > 0 && <WeightChart entries={chartEntries} goalWeight={goalWeight} />}
 
       {/* history */}
       {entries.length > 0 ? (
@@ -147,7 +173,7 @@ export default function WeightSection({ entries, goalWeight, onRefresh }) {
           <div className="hidden md:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className=" text-text-muted uppercase tracking-wide border-b border-border">
+                <tr className="text-text-muted uppercase tracking-wide border-b border-border">
                   <th className="text-left py-2 font-medium">Date</th>
                   <th className="text-left py-2 font-medium">Weight</th>
                   <th className="text-left py-2 font-medium">Change</th>

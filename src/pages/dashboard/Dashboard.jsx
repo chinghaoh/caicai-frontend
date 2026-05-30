@@ -1,116 +1,118 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useCallback } from 'react'
+import { format } from 'date-fns'
+import { Pencil } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { apiClient } from '@/apiClient'
-import { useAuth } from '@/context/AuthContext'
-import AuthShell from '@/components/ui/AuthShell'
-import Input from '@/components/ui/Input'
+import CalorieRing from '@/components/ui/CalorieRing'
+import PageHeader from '@/components/ui/PageHeader'
 import Button from '@/components/ui/Button'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import MacroCard from './MacroCard'
+import WeightSection from './WeightSection'
 
-export default function Login() {
-  const navigate = useNavigate()
-  const { login } = useAuth()
+export default function Dashboard() {
+    const navigate = useNavigate()
+    const today = format(new Date(), 'yyyy-MM-dd')
 
-  const [email, setEmail]             = useState('')
-  const [password, setPassword]       = useState('')
-  const [loading, setLoading]         = useState(false)
-  const [demoLoading, setDemoLoading] = useState(false)
-  const [error, setError]             = useState(null)
-  const [fieldErrors, setFieldErrors] = useState({})
+    const [summary, setSummary] = useState(null)
+    const [weightEntries, setWeightEntries] = useState([])
+    const [loadingSummary, setLoadingSummary] = useState(true)
+    const [loadingWeight, setLoadingWeight] = useState(true)
+    const [error, setError] = useState(null)
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setError(null)
-    setFieldErrors({})
-    setLoading(true)
-    try {
-      const data = await apiClient('/api/auth/login', {
-        method: 'POST',
-        body: { email, password },
-      })
-      login(data)
-      navigate(data.hasCompletedOnboarding ? '/dashboard' : '/onboarding')
-    } catch (err) {
-      if (err.fieldErrors) setFieldErrors(err.fieldErrors)
-      else setError(err.message)
-    } finally {
-      setLoading(false)
+    const fetchSummary = useCallback(async () => {
+        try {
+            const res = await apiClient(`/api/dashboard/summary?date=${today}`)
+            setSummary(res.data ?? res)
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoadingSummary(false)
+        }
+    }, [today])
+
+    const fetchWeight = useCallback(async () => {
+        try {
+            const res = await apiClient('/api/weight')
+            console.log('fetchWeight res:', res)
+            setWeightEntries(res.data ?? res)
+        } catch {
+            // non-fatal
+        } finally {
+            setLoadingWeight(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        fetchSummary()
+        fetchWeight()
+    }, [fetchSummary, fetchWeight])
+
+    if (loadingSummary) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <LoadingSpinner />
+            </div>
+        )
     }
-  }
 
-  async function handleDemo() {
-    setError(null)
-    setDemoLoading(true)
-    try {
-      const data = await apiClient('/api/auth/demo', { method: 'POST' })
-      login(data)
-      navigate('/onboarding')
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setDemoLoading(false)
+    if (error) {
+        return (
+            <div className="px-4 py-6 text-center">
+                <p className="text-sm text-red">{error}</p>
+            </div>
+        )
     }
-  }
 
-  return (
-    <AuthShell>
-      <h1 className="text-2xl font-bold text-green mb-1">Caicai</h1>
-      <p className="text-sm text-text-muted mb-8">Track your nutrition. Reach your goals.</p>
+    const totals = summary?.totals ?? {}
+    const goal = summary?.goal ?? {}
+    const weight = summary?.weight ?? {}
 
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-        <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={e => {
-            setEmail(e.target.value)
-            setFieldErrors(prev => ({ ...prev, email: null }))
-          }}
-          placeholder="you@example.com"
-          error={fieldErrors.email}
-        />
-        <Input
-          label="Password"
-          labelAction={
-            <Link to="/forgot-password" className="text-sm text-text-muted hover:text-text-secondary">
-              Forgot password?
-            </Link>
-          }
-          type="password"
-          value={password}
-          onChange={e => {
-            setPassword(e.target.value)
-            setFieldErrors(prev => ({ ...prev, password: null }))
-          }}
-          placeholder="••••••••"
-          error={fieldErrors.password}
-        />
+    const MACRO_CARDS = [
+        { label: 'Protein', consumed: totals.protein ?? 0, goal: goal.protein ?? 0, color: 'var(--color-purple)' },
+        { label: 'Carbs', consumed: totals.carbs ?? 0, goal: goal.carbs ?? 0, color: 'var(--color-orange)' },
+        { label: 'Fat', consumed: totals.fat ?? 0, goal: goal.fat ?? 0, color: 'var(--color-yellow)' },
+        { label: 'Water', consumed: totals.waterMl ?? 0, goal: goal.waterMl ?? 0, color: 'var(--color-blue)' },
+    ]
 
-        {error && <p className="text-xs text-red">{error}</p>}
+    return (
+        <div className="px-4 py-6">
+            <PageHeader
+                title={format(new Date(), 'EEEE, MMM d')}
+                action={
+                    <Button variant="secondary" onClick={() => navigate('/settings?tab=goals')}>
+                        <Pencil size={14} className="mr-1.5" />
+                        Update Goals
+                    </Button>
+                }
+            />
 
-        <Button type="submit" fullWidth loading={loading}>
-          Log in
-        </Button>
-      </form>
+            {/* calorie ring + macro grid */}
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                <div className="bg-bg-card rounded-xl p-6 flex flex-col items-center justify-center md:w-64 flex-shrink-0">
+                    <CalorieRing
+                        value={Math.round(totals.calories ?? 0)}
+                        goal={Math.round(goal.calories ?? 0)}
+                        size={180}
+                        strokeWidth={12}
+                        showGoal
+                    />
+                </div>
+                <div className="grid grid-cols-2 gap-3 flex-1">
+                    {MACRO_CARDS.map(m => (
+                        <MacroCard key={m.label} {...m} />
+                    ))}
+                </div>
+            </div>
 
-      <p className="text-sm text-text-muted text-center mt-6">
-        Don't have an account?{' '}
-        <Link to="/register" className="text-green hover:opacity-80">
-          Sign up
-        </Link>
-      </p>
-
-      <div className="flex items-center gap-3 my-6">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-xs text-text-muted">or</span>
-        <div className="flex-1 h-px bg-border" />
-      </div>
-
-      <Button variant="secondary" fullWidth loading={demoLoading} onClick={handleDemo}>
-        Try a demo account
-      </Button>
-      <p className="text-xs text-text-muted text-center mt-2">
-        No sign up needed. Demo data is deleted after 2 hours.
-      </p>
-    </AuthShell>
-  )
+            {/* weight section */}
+            {!loadingWeight && (
+                <WeightSection
+                    entries={weightEntries}
+                    goalWeight={weight.target ?? null}
+                    onRefresh={fetchWeight}
+                />
+            )}
+        </div>
+    )
 }
