@@ -47,7 +47,7 @@
 [x] 26. Settings frontend
 [Work in progress]  27. Finish backlog 
 [x] 28.  Create demo
-[]  29. upload to aws
+[x]  29. upload to aws
 []  30. setup github actions
 
 ```
@@ -188,6 +188,12 @@
 - /settings?tab=goals — URL param drives active tab, "Update Goals" on Dashboard navigates here
 - No inline password change — Account tab sends forgot-password email instead
 - Ai suggestion = coming soon placeholder for now
+
+- EC2 security group must have explicit IPv4 rule for port 8080 — the console defaulted to IPv6 only
+- Elastic IP assigned to EC2 for stable routing
+- RedisConfig.java updated to use spring.data.redis.ssl.enabled property for conditional TLS
+- CloudFront error pages: 403 and 404 → index.html with 200 (SPA routing fix)
+- Frontend built with VITE_API_URL env var set to CloudFront domain
 ---
 
 ## Files Created So Far
@@ -318,7 +324,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 29 — upload to aws
+Step 39 - srtup github actions
 
 ---
 
