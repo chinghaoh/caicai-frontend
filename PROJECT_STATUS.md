@@ -46,9 +46,9 @@
 [x] 25. Dashboard frontend
 [x] 26. Settings frontend
 [Work in progress]  27. Finish backlog 
-[x]  28  Create demo
-[x]  30. upload to aws
-[]  31. setup github actions
+[x] 28.  Create demo
+[]  29. upload to aws
+[]  30. setup github actions
 
 ```
 
@@ -318,7 +318,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 
 ## Current Task
 
-Step 31 — Create tests
+Step 29 — upload to aws
 
 ---
 
