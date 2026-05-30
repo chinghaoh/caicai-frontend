@@ -69,7 +69,7 @@ export default function Sidebar() {
             <UserAvatar name={user.name} />
           </NavLink>
           <div className="min-w-0 flex-1">
-            <NavLink to="/profile" className="block">
+            <NavLink to="/settings?tab=profile" className="block">
               <p className="text-sm font-medium text-text-primary truncate hover:text-green transition-colors">{user.name}</p>
             </NavLink>
             <button
