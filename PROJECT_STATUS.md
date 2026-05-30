@@ -47,8 +47,7 @@
 [x] 26. Settings frontend
 [Work in progress]  27. Finish backlog 
 [x]  28  Create demo
-[]  29. create tests
-[]  30. upload to aws
+[x]  30. upload to aws
 []  31. setup github actions
 
 ```
