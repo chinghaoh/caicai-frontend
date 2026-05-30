@@ -13,6 +13,7 @@ export default function Login() {
   const [email, setEmail]             = useState('')
   const [password, setPassword]       = useState('')
   const [loading, setLoading]         = useState(false)
+  const [demoLoading, setDemoLoading] = useState(false)
   const [error, setError]             = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
 
@@ -33,6 +34,20 @@ export default function Login() {
       else setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleDemo() {
+    setError(null)
+    setDemoLoading(true)
+    try {
+      const data = await apiClient('/api/auth/demo', { method: 'POST' })
+      login(data)
+      navigate('/onboarding')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setDemoLoading(false)
     }
   }
 
@@ -82,6 +97,19 @@ export default function Login() {
         <Link to="/register" className="text-green hover:opacity-80">
           Sign up
         </Link>
+      </p>
+
+      <div className="flex items-center gap-3 my-6">
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs text-text-muted">or</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
+      <Button variant="secondary" fullWidth loading={demoLoading} onClick={handleDemo}>
+        Try a demo account
+      </Button>
+      <p className="text-xs text-text-muted text-center mt-2">
+        No sign up needed. Demo data is deleted after 2 hours.
       </p>
     </AuthShell>
   )

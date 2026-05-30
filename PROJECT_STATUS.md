@@ -338,25 +338,13 @@ Step 31 — Backlog cleanup + polish
 ---
 
 ## Backlog
-- Edit food log entry — PUT /api/food-logs/{id}, change amountGrams and mealType. Frontend: edit modal. Implement during polish pass.
-- OpenFoodFacts replacement — find alternative food data API. Cached PostgreSQL data works in the meantime.
-- Need to rethink our current designs after the whole frontend has been implemented
-- Write backend service tests for all business logic once all backend steps are complete (steps 9–13).
-  Cover: calorie/macro totals, goal progress calculations, dashboard aggregations, date boundary edge cases, ownership checks.
-- AI food recommendations — suggest foods to user based on remaining
-  daily macro goals. Implement after dashboard is built (step 16).
-- Structured logging — add log levels and correlation IDs to make
-  debugging production issues easier. Implement before first
-  production deployment.
 - Macro education tooltips — show a small info popup on each macro
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
-- Edit food log entry — let user change amountGrams on an existing logged entry. Inline edit on LoggedEntry.jsx row.    Implement during polish pass.
 - Weight chart UX — sparse with few data points, x-axis labels repeat. Add minimum data threshold before showing chart, and time range toggle (30d / 3m / 6m / All) once enough data exists.
-- Trends page — weekly/monthly charts using existing dashboard endpoints
 - AI goal re-suggestion from within the app
 - AI food recommendations based on remaining daily macros
 - Edit email in the settings

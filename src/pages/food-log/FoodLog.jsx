@@ -15,28 +15,28 @@ import LoggedEntry from './LoggedEntry'
 
 const MEAL_OPTIONS = [
   { value: 'BREAKFAST', label: 'Breakfast' },
-  { value: 'LUNCH',     label: 'Lunch'     },
-  { value: 'DINNER',    label: 'Dinner'    },
-  { value: 'SNACK',     label: 'Snack'     },
+  { value: 'LUNCH', label: 'Lunch' },
+  { value: 'DINNER', label: 'Dinner' },
+  { value: 'SNACK', label: 'Snack' },
 ]
 
 export default function FoodLog() {
   const today = format(new Date(), 'yyyy-MM-dd')
 
-  const [date, setDate]                     = useState(today)
-  const [showPicker, setShowPicker]         = useState(false)
-  const [summary, setSummary]               = useState(null)
+  const [date, setDate] = useState(today)
+  const [showPicker, setShowPicker] = useState(false)
+  const [summary, setSummary] = useState(null)
   const [summaryLoading, setSummaryLoading] = useState(true)
-  const [activeMeal, setActiveMeal]         = useState('BREAKFAST')
-  const [activeTab, setActiveTab]           = useState('logged')
-  const [query, setQuery]                   = useState('')
-  const [searchResults, setSearchResults]   = useState([])
-  const [searching, setSearching]           = useState(false)
-  const [favourites, setFavourites]         = useState([])
-  const [favouriteIds, setFavouriteIds]     = useState(new Set())
-  const [expandedId, setExpandedId]         = useState(null)
+  const [activeMeal, setActiveMeal] = useState('BREAKFAST')
+  const [activeTab, setActiveTab] = useState('logged')
+  const [query, setQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [searching, setSearching] = useState(false)
+  const [favourites, setFavourites] = useState([])
+  const [favouriteIds, setFavouriteIds] = useState(new Set())
+  const [expandedId, setExpandedId] = useState(null)
   const [waterModalOpen, setWaterModalOpen] = useState(false)
-  const debounceRef                         = useRef(null)
+  const debounceRef = useRef(null)
 
   const fetchSummary = useCallback(async () => {
     setSummaryLoading(true)
@@ -58,7 +58,7 @@ export default function FoodLog() {
         setFavourites(res)
         setFavouriteIds(new Set(res.map(f => f.id)))
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function FoodLog() {
         setFavouriteIds(prev => new Set([...prev, food.id]))
         setFavourites(prev => [...prev, food])
       }
-    } catch {}
+    } catch { }
   }
 
   function shiftDate(days) {
@@ -121,19 +121,19 @@ export default function FoodLog() {
     if (next <= today) { setDate(next); setExpandedId(null) }
   }
 
-  const isToday     = date === today
+  const isToday = date === today
   const displayDate = isToday ? 'Today' : format(new Date(date), 'EEE, MMM d')
 
-  const totals         = summary?.totals         ?? { calories: 0, protein: 0, carbs: 0, fat: 0, waterMl: 0 }
-  const goal           = summary?.goal           ?? { calories: 2000, protein: 150, carbs: 200, fat: 65, waterMl: 2500 }
-  const logsByMeal     = summary?.logsByMealType ?? {}
-  const entriesForMeal = logsByMeal[activeMeal]  ?? []
+  const totals = summary?.totals ?? { calories: 0, protein: 0, carbs: 0, fat: 0, waterMl: 0 }
+  const goal = summary?.goal ?? { calories: 2000, protein: 150, carbs: 200, fat: 65, waterMl: 2500 }
+  const logsByMeal = summary?.logsByMealType ?? {}
+  const entriesForMeal = logsByMeal[activeMeal] ?? []
   const isSearchActive = query.length >= 2
 
   const METRICS = [
     { label: 'Protein', value: Math.round(totals.protein), max: goal.protein, unit: 'g', color: 'text-purple', bar: 'bg-purple', clickable: false },
-    { label: 'Carbs',   value: Math.round(totals.carbs),   max: goal.carbs,   unit: 'g', color: 'text-orange', bar: 'bg-orange', clickable: false },
-    { label: 'Fat',     value: Math.round(totals.fat),     max: goal.fat,     unit: 'g', color: 'text-yellow', bar: 'bg-yellow', clickable: false },
+    { label: 'Carbs', value: Math.round(totals.carbs), max: goal.carbs, unit: 'g', color: 'text-orange', bar: 'bg-orange', clickable: false },
+    { label: 'Fat', value: Math.round(totals.fat), max: goal.fat, unit: 'g', color: 'text-yellow', bar: 'bg-yellow', clickable: false },
     {
       label: 'Water',
       value: Math.round((totals.waterMl ?? 0) / 100) / 10,
@@ -201,7 +201,7 @@ export default function FoodLog() {
           <div className="bg-bg-card rounded-xl p-4 mb-4">
             {/* Mobile */}
             <div className="flex flex-col items-center gap-4 md:hidden">
-              <CalorieRing value={totals.calories} goal={goal.calories} size={140} strokeWidth={8} />
+              <CalorieRing value={totals.calories} goal={goal.calories} size={140} strokeWidth={8} showGoal />
               <div className="w-full flex flex-col gap-3">
                 {METRICS.map(m => (
                   <div
@@ -220,7 +220,7 @@ export default function FoodLog() {
             </div>
             {/* Desktop */}
             <div className="hidden md:flex items-center gap-6">
-              <CalorieRing value={totals.calories} goal={goal.calories} size={100} strokeWidth={8} />
+              <CalorieRing value={totals.calories} goal={goal.calories} size={120} strokeWidth={8} showGoal />
               <div className="flex-1 grid grid-cols-4 gap-4">
                 {METRICS.map(m => (
                   <div
@@ -279,21 +279,19 @@ export default function FoodLog() {
             <div className="flex mb-4 bg-bg-input rounded-xl overflow-hidden">
               <button
                 onClick={() => setActiveTab('logged')}
-                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${
-                  activeTab === 'logged'
+                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${activeTab === 'logged'
                     ? 'bg-bg-card text-text-primary rounded-xl'
                     : 'text-text-muted'
-                }`}
+                  }`}
               >
                 Logged {entriesForMeal.length > 0 && <span className="text-text-muted text-sm">{entriesForMeal.length}</span>}
               </button>
               <button
                 onClick={() => setActiveTab('favourites')}
-                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${
-                  activeTab === 'favourites'
+                className={`flex-1 py-2.5 text-base font-medium transition-colors cursor-pointer ${activeTab === 'favourites'
                     ? 'bg-bg-card text-text-primary rounded-xl'
                     : 'text-text-muted'
-                }`}
+                  }`}
               >
                 Favourites
               </button>

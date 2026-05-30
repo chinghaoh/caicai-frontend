@@ -1,4 +1,4 @@
-export default function CalorieRing({ value = 0, goal = 2000, size = 160, strokeWidth = 10 }) {
+export default function CalorieRing({ value = 0, goal = 2000, size = 160, strokeWidth = 10, showGoal = false }) {
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
   const pct = goal > 0 ? Math.min(value / goal, 1) : 0
@@ -27,7 +27,7 @@ export default function CalorieRing({ value = 0, goal = 2000, size = 160, stroke
           style={{ transition: 'stroke-dashoffset 0.6s ease' }}
         />
         <text
-          x={cx} y={cy - 8}
+          x={cx} y={showGoal ? cy - 14 : cy - 8}
           textAnchor="middle"
           dominantBaseline="middle"
           fill="#f5f5f5"
@@ -38,19 +38,50 @@ export default function CalorieRing({ value = 0, goal = 2000, size = 160, stroke
         >
           {consumed.toLocaleString()}
         </text>
-        <text
-          x={cx} y={cy + 14}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="#737373"
-          fontSize="10"
-          fontWeight="600"
-          fontFamily="inherit"
-          letterSpacing="1"
-          style={{ transform: `rotate(90deg)`, transformOrigin: `${cx}px ${cy}px` }}
-        >
-          KCAL
-        </text>
+
+        {showGoal ? (
+          <>
+            <text
+              x={cx} y={cy + 8}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="#737373"
+              fontSize="10"
+              fontWeight="500"
+              fontFamily="inherit"
+              style={{ transform: `rotate(90deg)`, transformOrigin: `${cx}px ${cy}px` }}
+            >
+              / {goal.toLocaleString()} kcal
+            </text>
+            <text
+              x={cx} y={cy + 22}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="#737373"
+              fontSize="9"
+              fontWeight="600"
+              fontFamily="inherit"
+              letterSpacing="1"
+              style={{ transform: `rotate(90deg)`, transformOrigin: `${cx}px ${cy}px` }}
+            >
+              CONSUMED
+            </text>
+          </>
+        ) : (
+          <text
+            x={cx} y={cy + 14}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#737373"
+            fontSize="10"
+            fontWeight="600"
+            fontFamily="inherit"
+            letterSpacing="1"
+            style={{ transform: `rotate(90deg)`, transformOrigin: `${cx}px ${cy}px` }}
+          >
+            KCAL
+          </text>
+        )}
       </svg>
     </div>
   )
