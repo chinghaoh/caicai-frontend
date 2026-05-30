@@ -91,6 +91,14 @@ export default function FoodLog() {
     fetchSummary()
   }
 
+  async function handleUpdate(entryId, amountGrams) {
+    await apiClient(`/api/food-logs/${entryId}`, {
+      method: 'PUT',
+      body: { amountGrams },
+    })
+    fetchSummary()
+  }
+
   async function handleToggleFavourite(food) {
     const isFav = favouriteIds.has(food.id)
     try {
@@ -298,7 +306,7 @@ export default function FoodLog() {
                 ) : (
                   <div className="flex flex-col gap-2">
                     {entriesForMeal.map(entry => (
-                      <LoggedEntry key={entry.id} entry={entry} onDelete={handleDelete} />
+                      <LoggedEntry key={entry.id} entry={entry} onDelete={handleDelete} onUpdate={handleUpdate} />
                     ))}
                   </div>
                 )}

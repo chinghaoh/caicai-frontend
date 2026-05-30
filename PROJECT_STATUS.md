@@ -322,7 +322,7 @@ src/main/java/com/caicai/dashboard/DashboardController.java
 Step 31 — Backlog cleanup + polish
 
 ## Remaining Steps (in order)
-31. Backlog cleanup (dead files, UserAvatar extraction, nav fixes, AI placeholder route)
+31. Backlog cleanup
 32. Demo button (copy from existing project)
 33. Create tests
 34. Upload to AWS
