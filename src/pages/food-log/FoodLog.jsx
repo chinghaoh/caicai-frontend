@@ -14,6 +14,7 @@ import ExpandableFoodCard from './ExpandableFoodCard'
 import LoggedEntry from './LoggedEntry'
 
 const MEAL_OPTIONS = [
+  { value: 'ALL', label: 'All' },
   { value: 'BREAKFAST', label: 'Breakfast' },
   { value: 'LUNCH', label: 'Lunch' },
   { value: 'DINNER', label: 'Dinner' },
@@ -27,7 +28,7 @@ export default function FoodLog() {
   const [showPicker, setShowPicker] = useState(false)
   const [summary, setSummary] = useState(null)
   const [summaryLoading, setSummaryLoading] = useState(true)
-  const [activeMeal, setActiveMeal] = useState('BREAKFAST')
+  const [activeMeal, setActiveMeal] = useState('ALL')
   const [activeTab, setActiveTab] = useState('logged')
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -86,6 +87,7 @@ export default function FoodLog() {
     setQuery('')
     setSearchResults([])
     setExpandedId(null)
+    setActiveMeal('ALL')          
     if (logDate === date) fetchSummary()
   }
 
@@ -130,7 +132,9 @@ export default function FoodLog() {
   const totals = summary?.totals ?? { calories: 0, protein: 0, carbs: 0, fat: 0, waterMl: 0 }
   const goal = summary?.goal ?? { calories: 2000, protein: 150, carbs: 200, fat: 65, waterMl: 2500 }
   const logsByMeal = summary?.logsByMealType ?? {}
-  const entriesForMeal = logsByMeal[activeMeal] ?? []
+  const entriesForMeal = activeMeal === 'ALL'
+    ? ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK'].flatMap(m => logsByMeal[m] ?? [])
+    : (logsByMeal[activeMeal] ?? [])
   const isSearchActive = query.length >= 2
 
   const METRICS = [
@@ -217,6 +221,9 @@ export default function FoodLog() {
                       <span className="text-text-muted">{m.value}{m.unit} / {m.max}{m.unit}</span>
                     </div>
                     <ProgressBar value={m.value} max={m.max} color={m.bar} />
+                    {m.clickable && (
+                      <p className="text-xs text-text-muted mt-1">Tap here to log water</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -234,6 +241,9 @@ export default function FoodLog() {
                     <span className={`text-sm font-medium ${m.color}`}>{m.label}</span>
                     <p className="text-sm text-text-muted mt-0.5">{m.value}{m.unit} / {m.max}{m.unit}</p>
                     <div className="mt-2"><ProgressBar value={m.value} max={m.max} color={m.bar} /></div>
+                    {m.clickable && (
+                      <p className="text-xs text-text-muted mt-1">Click here to log water</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -303,7 +313,7 @@ export default function FoodLog() {
             {activeTab === 'logged' ? (
               <section>
                 {entriesForMeal.length === 0 ? (
-                  <EmptyState icon="🍽️" title="Nothing logged" description={`No ${activeMeal.toLowerCase()} entries yet.`} />
+                  <EmptyState icon="🍽️" title="Nothing logged" description={`No ${activeMeal === 'ALL' ? 'entries' : activeMeal.toLowerCase() + ' entries'} yet.`} />
                 ) : (
                   <div className="flex flex-col gap-2">
                     {entriesForMeal.map(entry => (
