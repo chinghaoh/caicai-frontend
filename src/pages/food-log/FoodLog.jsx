@@ -143,8 +143,8 @@ export default function FoodLog() {
     { label: 'Fat', value: Math.round(totals.fat), max: goal.fat, unit: 'g', color: 'text-yellow', bar: 'bg-yellow', clickable: false },
     {
       label: 'Water',
-      value: Math.round((totals.waterMl ?? 0) / 100) / 10,
-      max: Math.round((goal.waterMl ?? 2500) / 100) / 10,
+      value: Math.round((totals.waterMl ?? 0) / 10) / 100,
+      max: Math.round((goal.waterMl ?? 2500) / 10) / 100,
       unit: 'L',
       color: 'text-blue',
       bar: 'bg-blue',

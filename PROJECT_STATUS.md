@@ -339,13 +339,9 @@ Step 31 work on backlog
 ---
 
 ## Backlog
-- user can login and get to onboarding without being verified.
-- create scheduler to delete unverified accounts
-- logging food, should set default filter pill to breakfast
-- water rounds up 250ml sets it to 0.3L
 - Dockerize ci cd
 - Fix ci cd (remove skip test)
-- AI food recommendations based on remaining daily macros (need to figure out with flow with current setup)
+- Kafka: calorie milestone email — when daily calories cross 50% of goal for the first time, send email via existing EmailService. Gate with Redis key `calorie-alert:{userId}:{date}` to prevent duplicate sends. Requires Kafka producer on FoodLogService and a consumer that checks pre/post totals against the user's active goal.
 ---
 
 ## How To Use This File

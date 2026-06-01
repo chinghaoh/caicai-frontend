@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { apiClient } from '@/apiClient'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
-
+import { useAuth } from '@/context/AuthContext'
 const GENDER_OPTIONS = ['MALE', 'FEMALE']
 const ACTIVITY_OPTIONS = [
   { value: 'SEDENTARY', label: 'Sedentary', desc: 'Little or no exercise' },
@@ -13,6 +13,7 @@ const ACTIVITY_OPTIONS = [
 ]
 
 export default function ProfileTab({ user }) {
+  const { updateUser } = useAuth()
   const [form, setForm] = useState({
     name: '',
     age: '',
@@ -61,6 +62,15 @@ export default function ProfileTab({ user }) {
           gender: form.gender,
           activityLevel: form.activityLevel,
         },
+      })
+
+      updateUser({
+        name: form.name,
+        age: parseInt(form.age),
+        weightKg: parseFloat(form.weightKg),
+        heightCm: parseFloat(form.heightCm),
+        gender: form.gender,
+        activityLevel: form.activityLevel,
       })
       setSuccess(true)
     } catch (err) {

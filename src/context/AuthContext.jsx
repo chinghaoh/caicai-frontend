@@ -32,6 +32,10 @@ export function AuthProvider({ children }) {
     setUser(prev => ({ ...prev, hasCompletedOnboarding: true }))
   }
 
+  function updateUser(patch) {
+    setUser(prev => ({ ...prev, ...patch }))
+  }
+
   const value = {
     user,
     loading,
@@ -39,6 +43,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     completeOnboarding,
+    updateUser,
   }
 
   return (

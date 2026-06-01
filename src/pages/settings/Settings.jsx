@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { User, Target, Shield } from 'lucide-react'
-import { apiClient } from '@/apiClient'
+import { useAuth } from '@/context/AuthContext'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import ProfileTab from './ProfileTab'
 import GoalsTab from './GoalsTab'
@@ -14,27 +14,12 @@ const TABS = [
 ]
 
 export default function Settings() {
+  const { user, loading } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const initialTab = searchParams.get('tab') ?? 'profile'
   const [activeTab, setActiveTab] = useState(
     TABS.find(t => t.key === initialTab) ? initialTab : 'profile'
   )
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await apiClient('/api/users/me')
-        setUser(res.data ?? res)
-      } catch {
-        // silent
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchUser()
-  }, [])
 
   function switchTab(key) {
     setActiveTab(key)
@@ -55,7 +40,6 @@ export default function Settings() {
 
       <div className="flex flex-col md:flex-row gap-6">
 
-        {/* desktop sidebar nav */}
         <aside className="hidden md:flex flex-col gap-1 w-48 flex-shrink-0">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
@@ -76,7 +60,6 @@ export default function Settings() {
           ))}
         </aside>
 
-        {/* mobile top tabs */}
         <div className="md:hidden flex border-b border-border mb-2">
           {TABS.map(({ key, label }) => (
             <button
@@ -93,7 +76,6 @@ export default function Settings() {
           ))}
         </div>
 
-        {/* content */}
         <div className="flex-1 min-w-0">
           {activeTab === 'profile' && <ProfileTab user={user} />}
           {activeTab === 'goals'   && <GoalsTab user={user} />}

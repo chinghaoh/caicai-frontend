@@ -53,7 +53,7 @@ export default function ExpandableFoodCard({
       setGrams('100')
       setError(null)
       setSuccess(false)
-      setCardMeal(activeMeal)
+      setCardMeal(activeMeal === 'ALL' ? 'BREAKFAST' : activeMeal)
       setCardDate(activeDate)
       setDateInput(toDisplayDate(activeDate))
       setDateError(null)
