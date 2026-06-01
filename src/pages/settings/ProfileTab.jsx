@@ -5,11 +5,11 @@ import Button from '@/components/ui/Button'
 
 const GENDER_OPTIONS = ['MALE', 'FEMALE']
 const ACTIVITY_OPTIONS = [
-  { value: 'SEDENTARY',   label: 'Sedentary',    desc: 'Little or no exercise' },
-  { value: 'LIGHT',       label: 'Light',         desc: '1–3 days/week' },
-  { value: 'MODERATE',    label: 'Moderate',      desc: '3–5 days/week' },
-  { value: 'ACTIVE',      label: 'Active',        desc: '6–7 days/week' },
-  { value: 'VERY_ACTIVE', label: 'Very Active',   desc: 'Twice daily or physical job' },
+  { value: 'SEDENTARY', label: 'Sedentary', desc: 'Little or no exercise' },
+  { value: 'LIGHT', label: 'Light', desc: '1–3 days/week' },
+  { value: 'MODERATE', label: 'Moderate', desc: '3–5 days/week' },
+  { value: 'ACTIVE', label: 'Active', desc: '6–7 days/week' },
+  { value: 'VERY_ACTIVE', label: 'Very Active', desc: 'Twice daily or physical job' },
 ]
 
 export default function ProfileTab({ user }) {
@@ -29,11 +29,11 @@ export default function ProfileTab({ user }) {
   useEffect(() => {
     if (user) {
       setForm({
-        name:          user.name          ?? '',
-        age:           user.age           ?? '',
-        weightKg:      user.weightKg      ?? '',
-        heightCm:      user.heightCm      ?? '',
-        gender:        user.gender        ?? 'MALE',
+        name: user.name ?? '',
+        age: user.age ?? '',
+        weightKg: user.weightKg ?? '',
+        heightCm: user.heightCm ?? '',
+        gender: user.gender ?? 'MALE',
         activityLevel: user.activityLevel ?? 'MODERATE',
       })
     }
@@ -54,11 +54,11 @@ export default function ProfileTab({ user }) {
       await apiClient('/api/users/me', {
         method: 'PUT',
         body: {
-          name:          form.name,
-          age:           parseInt(form.age),
-          weightKg:      parseFloat(form.weightKg),
-          heightCm:      parseFloat(form.heightCm),
-          gender:        form.gender,
+          name: form.name,
+          age: parseInt(form.age),
+          weightKg: parseFloat(form.weightKg),
+          heightCm: parseFloat(form.heightCm),
+          gender: form.gender,
           activityLevel: form.activityLevel,
         },
       })
@@ -88,7 +88,8 @@ export default function ProfileTab({ user }) {
           <div className="flex flex-col gap-1">
             <label className="text-sm text-text-secondary">Email Address</label>
             <div className="bg-bg-input border border-border rounded-lg px-3 py-2 text-base text-text-muted">
-              {user?.email ?? '—'}
+              {user?.isDemo ? 'Demo account' : (user?.email ?? '—')}
+
             </div>
           </div>
         </div>

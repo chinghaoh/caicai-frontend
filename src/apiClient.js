@@ -26,13 +26,12 @@ export async function apiClient(path, options = {}) {
     throw { message: 'Network error, please try again' }
   }
 
-  let json
-  try {
-    const text = await response.text()
-    json = text ? JSON.parse(text) : {}
-  } catch {
-    throw { message: 'Unexpected server response' }
-  }
+  let json = {}
+try {
+  const text = await response.text()
+  if (text) json = JSON.parse(text)
+} catch {
+}
 
   if (response.status === 401) {
     if (!path.includes('/api/auth/')) {
