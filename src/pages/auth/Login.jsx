@@ -27,6 +27,7 @@ export default function Login() {
         method: 'POST',
         body: { email, password },
       })
+      console.log('handleSubmit data:', data)
       login(data)
       navigate(data.hasCompletedOnboarding ? '/dashboard' : '/onboarding')
     } catch (err) {
