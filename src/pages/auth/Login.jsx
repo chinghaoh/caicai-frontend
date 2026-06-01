@@ -30,7 +30,6 @@ export default function Login() {
       login(data)
       navigate(data.hasCompletedOnboarding ? '/dashboard' : '/onboarding')
     } catch (err) {
-      console.log('Login error:', err)
       if (err.fieldErrors) setFieldErrors(err.fieldErrors)
       else setError(err.message)
     } finally {
