@@ -339,6 +339,7 @@ Step 31 work on backlog
 ---
 
 ## Backlog
+- user can login and get to onboarding without being verified.
 - create scheduler to delete unverified accounts
 - logging food, should set default filter pill to breakfast
 - water rounds up 250ml sets it to 0.3L
