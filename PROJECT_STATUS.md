@@ -341,7 +341,6 @@ Step 31 work on backlog
 ## Backlog
 - Create verify page -> verify redirect to verify page to show it succeeded or if token already used or something
 - create scheduler to delete unverified accounts
-- Onboarding cannot skip
 - logging food, should set default filter pill to breakfast
 - water rounds up 250ml sets it to 0.3L
 - Dockerize ci cd
