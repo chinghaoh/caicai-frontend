@@ -56,7 +56,7 @@ export default function AiPage() {
     const errs = {}
     if (!formData.goalType)
       errs.goalType = 'Please select a goal type'
-    if (!formData.targetWeightKg || isNaN(formData.targetWeightKg) || +formData.targetWeightKg < 20)
+    if (!formData.targetWeightKg || isNaN(formData.targetWeightKg) || +formData.targetWeightKg < 20 || +formData.targetWeightKg > 300)
       errs.targetWeightKg = 'Enter a valid target weight'
     if (!formData.activityLevel)
       errs.activityLevel = 'Please select an activity level'

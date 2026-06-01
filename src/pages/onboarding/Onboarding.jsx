@@ -62,10 +62,10 @@ export default function Onboarding() {
       errs.gender = 'Please select a gender'
     if (!formData.age || isNaN(formData.age) || +formData.age < 10 || +formData.age > 120)
       errs.age = 'Enter a valid age (10–120)'
-    if (!formData.heightCm || isNaN(formData.heightCm) || +formData.heightCm < 50 || +formData.heightCm > 300)
-      errs.heightCm = 'Enter a valid height (50–300 cm)'
-    if (!formData.weightKg || isNaN(formData.weightKg) || +formData.weightKg < 20 || +formData.weightKg > 500)
-      errs.weightKg = 'Enter a valid weight (20–500 kg)'
+    if (!formData.heightCm || isNaN(formData.heightCm) || +formData.heightCm < 50 || +formData.heightCm > 220)
+      errs.heightCm = 'Enter a valid height (220 cm)'
+    if (!formData.weightKg || isNaN(formData.weightKg) || +formData.weightKg < 20 || +formData.weightKg > 300)
+      errs.weightKg = 'Enter a valid weight (300 kg)'
     return errs
   }
 
