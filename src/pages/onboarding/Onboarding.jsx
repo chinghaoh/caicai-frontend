@@ -175,14 +175,6 @@ export default function Onboarding() {
           <ChevronLeft size={18} />
           Caicai
         </button>
-        {step < 3 && (
-          <button
-            onClick={handleSkip}
-            className="text-base text-text-muted cursor-pointer hover:text-text-secondary"
-          >
-            Skip
-          </button>
-        )}
       </div>
 
       {/* Progress bar */}
