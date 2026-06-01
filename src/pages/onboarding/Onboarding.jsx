@@ -121,7 +121,6 @@ export default function Onboarding() {
           targetWeightKg: parseFloat(formData.targetWeightKg),
         },
       })
-      console.log('fetchSuggestion data:', data)
       setSuggestion(data)
       setAdjusted(data)
       setStep(3)

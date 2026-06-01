@@ -339,15 +339,14 @@ Step 31 work on backlog
 ---
 
 ## Backlog
-- Edit email in the settings
-- AI food recommendations based on remaining daily macros (need to figure out with flow with current setup)
+- Create verify page -> verify redirect to verify page to show it succeeded or if token already used or something
+- create scheduler to delete unverified accounts
+- Onboarding cannot skip
+- logging food, should set default filter pill to breakfast
+- water rounds up 250ml sets it to 0.3L
 - Dockerize ci cd
 - Fix ci cd (remove skip test)
-- Macro education tooltips — show a small info popup on each macro
-  (protein, carbs, fat, calories) explaining what it does and why it matters.
-  Extensible for when fiber, sodium, and sugar are added to the UI.
-  Implement after dashboard is built (step 16).
--  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
+- AI food recommendations based on remaining daily macros (need to figure out with flow with current setup)
 ---
 
 ## How To Use This File
