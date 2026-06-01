@@ -112,7 +112,7 @@ export default function StepSuggestion({
           <p className="text-sm text-text-muted uppercase tracking-widest">Daily Calories</p>
           <div className="flex items-baseline gap-1.5 mt-1">
             <span className="text-2xl font-bold text-green">
-              {suggestion.calories.toLocaleString()}
+            {(suggestion.calories ?? 0).toLocaleString()}
             </span>
             <span className="text-sm text-text-muted">kcal</span>
           </div>
@@ -121,12 +121,12 @@ export default function StepSuggestion({
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <MacroCell label="Protein" value={suggestion.protein}  unit="g" color="bg-blue"     />
-        <MacroCell label="Carbs"   value={suggestion.carbs}    unit="g" color="bg-orange"   />
-        <MacroCell label="Fat"     value={suggestion.fat}      unit="g" color="bg-yellow"   />
+        <MacroCell label="Protein" value={suggestion.protein ?? 0}  unit="g" color="bg-blue"     />
+        <MacroCell label="Carbs"   value={suggestion.carbs ?? 0}    unit="g" color="bg-orange"   />
+        <MacroCell label="Fat"     value={suggestion.fat ?? 0}      unit="g" color="bg-yellow"   />
         <MacroCell
           label="Water"
-          value={Math.round(suggestion.waterMl / 100) / 10}
+          value={Math.round((suggestion.waterMl ?? 0) / 100) / 10}
           unit="L"
           color="bg-sky-400"
         />
