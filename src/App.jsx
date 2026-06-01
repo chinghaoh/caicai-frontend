@@ -18,7 +18,7 @@ import Settings from './pages/settings/Settings'
 import AiPage from './pages/ai/AiPage'
 
 function ProtectedRoute({ children, shell = true }) {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, loading, user } = useAuth()
 
   if (loading) {
     return (
@@ -29,6 +29,10 @@ function ProtectedRoute({ children, shell = true }) {
   }
 
   if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
+  if (!user.verified) {
     return <Navigate to="/login" replace />
   }
 
