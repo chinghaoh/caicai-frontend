@@ -14,6 +14,7 @@ import Favourites from './pages/favourites/Favourites'
 import FoodLog from './pages/food-log/FoodLog'
 import Dashboard from './pages/dashboard/Dashboard'
 import Settings from './pages/settings/Settings'
+import AiPage from './pages/ai/AiPage'
 
 
 
@@ -85,7 +86,7 @@ function AppInner() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/log"       element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
         <Route path="/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-        <Route path="/ai" element={<ProtectedRoute><PlaceholderPage label="AI" /></ProtectedRoute>} />
+        <Route path="/ai" element={<ProtectedRoute><AiPage /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />

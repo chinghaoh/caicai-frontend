@@ -339,8 +339,8 @@ Step 31 work on backlog
 ---
 
 ## Backlog
-- AI goal re-suggestion from within the app
-- AI food recommendations based on remaining daily macros
+- Edit email in the settings
+- AI food recommendations based on remaining daily macros (need to figure out with flow with current setup)
 - Dockerize ci cd
 - Fix ci cd (remove skip test)
 - Macro education tooltips — show a small info popup on each macro
@@ -348,7 +348,6 @@ Step 31 work on backlog
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
-- Edit email in the settings
 ---
 
 ## How To Use This File
