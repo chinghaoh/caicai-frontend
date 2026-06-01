@@ -9,14 +9,13 @@ import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
+import VerifyPage from './pages/auth/VerifyPage'
 import Onboarding from './pages/onboarding/Onboarding'
 import Favourites from './pages/favourites/Favourites'
 import FoodLog from './pages/food-log/FoodLog'
 import Dashboard from './pages/dashboard/Dashboard'
 import Settings from './pages/settings/Settings'
 import AiPage from './pages/ai/AiPage'
-
-
 
 function ProtectedRoute({ children, shell = true }) {
   const { isAuthenticated, loading } = useAuth()
@@ -78,16 +77,17 @@ function AppInner() {
         <Route path="/register"        element={<AuthRoute><Register /></AuthRoute>} />
         <Route path="/forgot-password" element={<AuthRoute><ForgotPassword /></AuthRoute>} />
         <Route path="/reset-password"  element={<AuthRoute><ResetPassword /></AuthRoute>} />
+        <Route path="/verify"          element={<VerifyPage />} />
 
         {/* Onboarding — protected but no shell (full-screen flow) */}
         <Route path="/onboarding" element={<ProtectedRoute shell={false}><Onboarding /></ProtectedRoute>} />
 
         {/* App pages — protected + shell */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/log"       element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
+        <Route path="/dashboard"  element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/log"        element={<ProtectedRoute><FoodLog /></ProtectedRoute>} />
         <Route path="/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-        <Route path="/ai" element={<ProtectedRoute><AiPage /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/ai"         element={<ProtectedRoute><AiPage /></ProtectedRoute>} />
+        <Route path="/settings"   element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
