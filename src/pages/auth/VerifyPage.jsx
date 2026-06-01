@@ -18,7 +18,7 @@
         return
       }
 
-      apiClient(`api/auth/verify?token=${token}`, { method: 'GET' })
+      apiClient(`/api/auth/verify?token=${token}`, { method: 'GET' })
         .then(() => setStatus('success'))
         .catch((err) => {
           setStatus('error')
