@@ -54,7 +54,7 @@ export default function AccountTab({ user }) {
       <div className="bg-bg-card rounded-xl p-5 flex flex-col gap-3">
         <h3 className="text-base font-medium text-text-primary">Change Password</h3>
         <p className="text-sm text-text-muted">
-          We'll send a password reset link to <span className="text-text-secondary">{user?.isDemo ? 'Demo account' : (user?.email ?? '—')}</span>.
+          We'll send a password reset link to <span className="text-text-secondary">{user?.demo ? 'Demo account' : (user?.email ?? '—')}</span>.
         </p>
         {resetSent ? (
           <p className="text-sm text-green">Reset link sent — check your email.</p>

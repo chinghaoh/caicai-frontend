@@ -88,7 +88,7 @@ export default function ProfileTab({ user }) {
           <div className="flex flex-col gap-1">
             <label className="text-sm text-text-secondary">Email Address</label>
             <div className="bg-bg-input border border-border rounded-lg px-3 py-2 text-base text-text-muted">
-              {user?.isDemo ? 'Demo account' : (user?.email ?? '—')}
+              {user?.demo ? 'Demo account' : (user?.email ?? '—')}
 
             </div>
           </div>
