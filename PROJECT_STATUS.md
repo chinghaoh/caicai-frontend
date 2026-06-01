@@ -8,7 +8,7 @@
 ## Current Status
 
 **Phase:** started — ready to build  
-**Last updated:** 2026-05-30
+**Last updated:** 2026-06-01
 
 ---
 
@@ -341,12 +341,13 @@ Step 31 work on backlog
 ## Backlog
 - AI goal re-suggestion from within the app
 - AI food recommendations based on remaining daily macros
+- Dockerize ci cd
+- Fix ci cd (remove skip test)
 - Macro education tooltips — show a small info popup on each macro
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
 -  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
-   or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
 - Edit email in the settings
 ---
 
