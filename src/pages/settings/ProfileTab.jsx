@@ -52,7 +52,7 @@ export default function ProfileTab({ user }) {
     setFieldErrors({})
     try {
       await apiClient('/api/users/me', {
-        method: 'PUT',
+        method: 'PATCH',
         body: {
           name: form.name,
           age: parseInt(form.age),
