@@ -34,7 +34,6 @@ export default function Dashboard() {
     const fetchWeight = useCallback(async () => {
         try {
             const res = await apiClient('/api/weight')
-            console.log('fetchWeight res:', res)
             setWeightEntries(res.data ?? res)
         } catch {
             // non-fatal
