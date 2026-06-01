@@ -47,7 +47,7 @@ function AuthRoute({ children }) {
     )
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && user.verified) {
     return <Navigate to={user.hasCompletedOnboarding ? '/dashboard' : '/onboarding'} replace />
   }
 
