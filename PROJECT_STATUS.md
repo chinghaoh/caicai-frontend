@@ -8,7 +8,7 @@
 ## Current Status
 
 **Phase:** started — ready to build  
-**Last updated:** 2026-06-01
+**Last updated:** 2026-06-02
 
 ---
 
@@ -196,6 +196,18 @@
 - RedisConfig.java updated to use spring.data.redis.ssl.enabled property for conditional TLS
 - CloudFront error pages: 403 and 404 → index.html with 200 (SPA routing fix)
 - Frontend built with VITE_API_URL env var set to CloudFront domain
+
+- Multi-stage Dockerfile added to caicai-backend/
+- Maven tag pinned to 3.9.16-amazoncorretto-17
+- /actuator/health added to Spring Security permitAll()
+- ECR repository caicai-backend created in eu-central-1
+- ECR scan on push enabled
+- caicai-ec2-role IAM role created and attached to EC2 — pulls from ECR without stored credentials
+- caicai-github-actions IAM user created with least privilege policy caicai-github-actions-policy
+- GitHub secrets updated in both repos with caicai-github-actions keys
+- ~/.env.docker created on EC2 — strips export from ~/.env for docker run --env-file
+- Docker 25.0.14 installed on EC2, daemon enabled on reboot, ec2-user added to docker group
+- Backend now deploys as a container, not a JAR
 ---
 
 ## Files Created So Far
@@ -322,6 +334,9 @@ src/main/java/com/caicai/weight/WeightController.java
 src/main/java/com/caicai/dashboard/DashboardDtos.java
 src/main/java/com/caicai/dashboard/DashboardService.java
 src/main/java/com/caicai/dashboard/DashboardController.java
+
+caicai-backend/Dockerfile
+caicai-backend/.dockerignore
 ---
 
 ## Current Task
@@ -342,6 +357,7 @@ Step 31 work on backlog
 - Dockerize ci cd
 - Fix ci cd (remove skip test)
 - Kafka: calorie milestone email — when daily calories cross 50% of goal for the first time, send email via existing EmailService. Gate with Redis key `calorie-alert:{userId}:{date}` to prevent duplicate sends. Requires Kafka producer on FoodLogService and a consumer that checks pre/post totals against the user's active goal.
+- A dedicated caicai-github-actions user with only S3, ECR, and EC2 deploy permissions limits the blast radius significantly.
 - Add read.me
 ---
 

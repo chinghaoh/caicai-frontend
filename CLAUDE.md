@@ -11,7 +11,7 @@ A weight management and nutrition tracking web app. Users log meals, track macro
 **Tech stack:**
 - Backend: Spring Boot 3, Java 17, PostgreSQL, Flyway, Spring Security JWT (HttpOnly cookies), Bucket4j + Redis rate limiting
 - Frontend: React (Vite), Tailwind CSS with custom `@theme` variables, date-fns
-- Infrastructure: AWS EC2, RDS PostgreSQL, ElastiCache Redis, S3 + CloudFront, GitHub Actions CI/CD
+- Infrastructure: AWS EC2, RDS PostgreSQL, ElastiCache Redis, S3 + CloudFront, ECR, GitHub Actions CI/CD
 - AI: Anthropic Claude API (goal suggestions only)
 - External API: FatSecret Basic (food search, cached in Redis + PostgreSQL)
 
@@ -108,7 +108,7 @@ Never skip steps. Never build out of order.
   (protein, carbs, fat, calories) explaining what it does and why it matters.
   Extensible for when fiber, sodium, and sugar are added to the UI.
   Implement after dashboard is built (step 16).
--  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern) 
+-  Review all service methods for single point of failure — decide whether to use fault-tolerant try/catch per section (dashboard pattern)
    or let exceptions propagate (domain endpoints). Document the decision per feature during polish pass.
 - Edit email in the settings
 
@@ -1105,10 +1105,15 @@ Both repos have GitHub Actions that auto-deploy on push to `main`.
 26. **401 on auth endpoints is a login failure, not session expiry** —
     never trigger SessionExpiredModal on /api/auth/* routes
 27. In IntelliJ, system environment variables are not passed to the JVM automatically —
-        either add them to the run configuration or use raw values in application-local.yml.
-        Never commit raw secrets to git.
+    either add them to the run configuration or use raw values in application-local.yml.
+    Never commit raw secrets to git.
 28. apiClient unwraps the envelope automatically — never do res.data in components, use res directly
 29. WeightService stores LocalDateTime.now() not date.atStartOfDay() — same-day entries need real timestamps for correct sort order
 30. CalorieRing shows consumed tracking up toward goal — not remaining
 31. Dashboard fetches summary and weight independently — weight failure is non-fatal
 32. ChangeLabel color is goal-aware — green = toward goal, red = away from goal regardless of direction
+33. **`~/.env` uses `export` syntax** — create `~/.env.docker` without export for `docker run --env-file`. Run: `sed 's/^export //' ~/.env > ~/.env.docker`
+34. **`COPY --from=builder` before `chown` in Stage 2** — copy the JAR in before changing ownership, otherwise `/app` is empty and container crashes
+35. **`/actuator/health` needs `permitAll()`** — add to Spring Security or Docker health check always returns 403
+36. **Never use admin credentials in GitHub secrets** — create a dedicated `caicai-github-actions` IAM user with least privilege policy
+37. **EC2 instance role for ECR pulls** — attach `AmazonEC2ContainerRegistryReadOnly` role to EC2, no credentials needed on server
