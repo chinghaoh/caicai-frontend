@@ -354,11 +354,7 @@ Step 31 work on backlog
 ---
 
 ## Backlog
-- Dockerize ci cd
-- Fix ci cd (remove skip test)
-- Kafka: calorie milestone email — when daily calories cross 50% of goal for the first time, send email via existing EmailService. Gate with Redis key `calorie-alert:{userId}:{date}` to prevent duplicate sends. Requires Kafka producer on FoodLogService and a consumer that checks pre/post totals against the user's active goal.
-- A dedicated caicai-github-actions user with only S3, ECR, and EC2 deploy permissions limits the blast radius significantly.
-- Add read.me
+- Ai suggestions for food to eat to reach goals
 ---
 
 ## How To Use This File
