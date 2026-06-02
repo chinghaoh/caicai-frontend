@@ -347,10 +347,6 @@ Step 31 work on backlog
 
 ## Known Issues / Blockers
 
-- Food Log must read date from URL query param when navigating from Dashboard calendar — update at step 25
-- FoodLogView.jsx, FoodLogTable.jsx, FoodLogCard.jsx are superseded by FoodLog.jsx — remove from repo
-
-
 ---
 
 ## Backlog
