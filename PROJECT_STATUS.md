@@ -50,6 +50,8 @@
 [x]  29. upload to aws
 [x]  30. setup github actions
 []  31. work on backlog
+[]  31. work on backlog
+
 
 
 ```
@@ -341,7 +343,12 @@ caicai-backend/.dockerignore
 
 ## Current Task
 
-Step 31 work on backlog
+Step 32 work on privacy statements terms and conditions
+- Write Privacy Policy content
+- Build /privacy route in frontend
+- Write Terms of Service content
+- Build /terms route in frontend
+- Wire footer links to both pages
 
 ---
 
