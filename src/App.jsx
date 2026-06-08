@@ -16,6 +16,8 @@ import FoodLog from './pages/food-log/FoodLog'
 import Dashboard from './pages/dashboard/Dashboard'
 import Settings from './pages/settings/Settings'
 import AiPage from './pages/ai/AiPage'
+import PrivacyPolicy from './pages/legal/PrivacyPolicy'
+import TermsOfService from './pages/legal/TermsOfService'
 
 function ProtectedRoute({ children, shell = true }) {
   const { isAuthenticated, loading, user } = useAuth()
@@ -58,14 +60,6 @@ function AuthRoute({ children }) {
   return children
 }
 
-function PlaceholderPage({ label }) {
-  return (
-    <div className="flex items-center justify-center py-32">
-      <p className="text-text-muted text-sm">{label} — coming soon.</p>
-    </div>
-  )
-}
-
 function AppInner() {
   const [sessionExpired, setSessionExpired] = useState(false)
 
@@ -76,10 +70,14 @@ function AppInner() {
   return (
     <div className="min-h-screen bg-bg-page">
       <Routes>
+        {/* Public pages — no auth required */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms"   element={<TermsOfService />} />
+
         {/* Auth pages — no shell */}
         <Route path="/login"           element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/register"        element={<AuthRoute><Register /></AuthRoute>} />
-        <Route path="/forgot-password" element={<ForgotPassword />}/>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password"  element={<ResetPassword />} />
         <Route path="/verify"          element={<VerifyPage />} />
 
